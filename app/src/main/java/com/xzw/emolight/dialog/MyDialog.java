@@ -42,11 +42,11 @@ public class MyDialog extends Dialog {
         setContentView(linearLayout, new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT,
                 LinearLayout.LayoutParams.MATCH_PARENT));
 
-        //取消进度监听器
+        //取消进度监听器cancel()时调用，dismiss不调用
         setOnCancelListener(new OnCancelListener() {
             @Override
             public void onCancel(DialogInterface dialog) {
-                Toast.makeText(context,"加载取消",Toast.LENGTH_SHORT).show();
+                Toast.makeText(context,context.getString(R.string.resolved),Toast.LENGTH_SHORT).show();
             }
         });
     }

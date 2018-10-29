@@ -19,7 +19,7 @@ import android.widget.Button;
 
 import com.xzw.emolight.dialog.MyDialog;
 import com.xzw.emolight.R;
-import com.xzw.emolight.others.FaceInfo;
+//import com.xzw.emolight.others.FaceInfo;
 import com.xzw.emolight.util.EmoHandler;
 
 import java.io.File;
@@ -77,6 +77,7 @@ public class ContentActivity extends AppCompatActivity {
             switch (message.what) {
                 case 1:
                     String emo = message.getData().getString("returnMsg");
+                    myDialog.cancel();
                     Log.d("debug",emo);
                     break;
                 default:

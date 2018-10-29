@@ -4,5 +4,6 @@
     <string name="capture">拍照</string>
     <string name="change_color">调色</string>
     <string name="loading">加载中</string>
+    <string name="resolved">解析完成</string>
     <string name="dir_name">emolpic</string>
 </resources>
