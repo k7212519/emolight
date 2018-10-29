@@ -37,15 +37,17 @@ import static com.xzw.emolight.R.layout.card_view_1;
 
 public class ContentActivity extends AppCompatActivity {
 
-    protected boolean useThemeStatusBarColor = false;//是否使用特殊的标题栏背景颜色，android5.0以上可以设置状态栏背景色，如果不使用则使用透明色值
-    protected boolean useStatusBarColor = true;//是否使用状态栏文字和图标为暗色，如果状态栏采用了白色系，则需要使状态栏和图标为暗色，android6.0以上可以设置
+    //是否使用特殊的标题栏背景颜色，android5.0以上可以设置状态栏背景色，如果不使用则使用透明色值
+    protected boolean useStatusBarColor = true;
+    //是否使用状态栏文字和图标为暗色，如果状态栏采用了白色系，则需要使状态栏和图标为暗色，android6.0以上可以设置
+    protected boolean useThemeStatusBarColor = false;
+    private Uri imageUri;
     /*
     private CardViewOne cardViewOne;
     private CardViewTwo cardViewTwo;
     private CardViewThree cardViewThree;
     */
 
-    private Uri imageUri;
 
 
 
@@ -57,8 +59,10 @@ public class ContentActivity extends AppCompatActivity {
         initView();                 //初始化view
     }
 
+    /**
+     * 初始化布局
+     */
     private void initView() {
-        //初始化布局
         Button btnChangeColor = findViewById(R.id.btn_change_color);
         Button btnCapture = findViewById(R.id.btn_capture);
         btnCapture.setOnClickListener(new MyClickListener());
