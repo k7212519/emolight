@@ -1,15 +1,13 @@
 package com.xzw.emolight.util;
 
 import android.content.Context;
-import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.util.Log;
 
 import com.megvii.cloud.http.CommonOperate;
-import com.megvii.cloud.http.FaceSetOperate;
 import com.megvii.cloud.http.Response;
-import com.xzw.emolight.Others.FaceInfo;
+import com.xzw.emolight.others.FaceInfo;
 import com.xzw.emolight.R;
 
 import org.json.JSONException;
@@ -49,14 +47,9 @@ public class EmoHandler {
             @Override
             public void run() {
                 CommonOperate commonOperate = new CommonOperate(key, secret, false);//创建新的操作
-//                FaceSetOperate faceSetOperate = new FaceSetOperate(key, secret, false);
                 imageByte = resToBitmap(R.drawable.c032);
                 try {
                     Response response = commonOperate.detectByte(imageByte, 0, return_attributes);
-//                    Response response = commonOperate.detectUrl(imageUrl, 0, null);
-//                    String faceToken = getFaceToken(response);
-//                    stringBuffer.append("\n");
-//                    stringBuffer.append(faceToken);
                     returnMsg = new String(response.getContent());
                     Log.e("faceAttributes",stringBuffer.toString());
                 } catch (Exception e) {

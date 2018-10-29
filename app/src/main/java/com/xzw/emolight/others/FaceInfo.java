@@ -1,4 +1,4 @@
-package com.xzw.emolight.Others;
+package com.xzw.emolight.others;
 
 public class FaceInfo {
     private int timeUsed;
