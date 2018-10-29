@@ -26,23 +26,13 @@ public class EmoHandler {
     private String secret = "0A_n-uNabUOjk8wvv4bh4ZGsLE8RH9Ps";
     private String return_attributes = "gender,age,smiling,facequality,emotion";
 
-    private StringBuffer stringBuffer = new StringBuffer();
-    private String msgExchange;
     private byte[] imageByte;
     private Context context;
     //private FaceInfo faceInfo;
     private Handler handler;
-
-    String imageUrl = "https://gss2.bdstatic.com/9fo3dSag_xI4khGkpoWK1HF6hhy/baike/w%3D268%3Bg%3D0/sign=29390ab34ba98226b8c12c21b2b9de3c/9a504fc2d562853527205ae798ef76c6a6ef6330.jpg";
     public EmoHandler(Context context, Handler handler) {
-        //this.imageUrl = imageUrl;
-        //this.faceInfo = faceInfo;
         this.context = context;
         this.handler = handler;
-    }
-
-    public StringBuffer getStringBuffer() {
-        return stringBuffer;
     }
 
 
@@ -55,7 +45,6 @@ public class EmoHandler {
                 try {
                     Response response = commonOperate.detectByte(imageByte, 0, return_attributes);
                     String returnMsg = new String(response.getContent());
-                    Log.e("faceAttributes",stringBuffer.toString());
 
                     Message message = handler.obtainMessage();
                     message.what = UPDATE_UI;
