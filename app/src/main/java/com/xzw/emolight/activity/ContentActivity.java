@@ -37,6 +37,7 @@ public class ContentActivity extends AppCompatActivity {
     private MyDialog myDialog;
     private int progress = 0;
     private String[] MESSAGES = {"加载中","加载中.","加载中..","加载中..."};
+    private byte[] imageByte;
     /*
     private CardViewOne cardViewOne;
     private CardViewTwo cardViewTwo;
@@ -140,6 +141,7 @@ public class ContentActivity extends AppCompatActivity {
                     fileHandler();//新建image文件
                     Intent intentCapture = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
                     intentCapture.putExtra(MediaStore.EXTRA_OUTPUT, imageUri);
+//                    intentCapture.putExtra(MediaStore.EXTRA_OUTPUT, imageByte);imageByte报null 不知道原因
                     startActivityForResult(intentCapture, 0);
                     break;
                 case R.id.btn_change_color:

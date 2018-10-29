@@ -10,13 +10,13 @@ import android.util.Log;
 
 import com.megvii.cloud.http.CommonOperate;
 import com.megvii.cloud.http.Response;
-import com.xzw.emolight.others.FaceInfo;
 import com.xzw.emolight.R;
 
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.ByteArrayOutputStream;
+import java.io.FileInputStream;
 
 public class EmoHandler {
 
@@ -30,6 +30,7 @@ public class EmoHandler {
     private Context context;
     //private FaceInfo faceInfo;
     private Handler handler;
+    private FileInputStream fileInputStream;
     public EmoHandler(Context context, Handler handler) {
         this.context = context;
         this.handler = handler;
@@ -41,11 +42,15 @@ public class EmoHandler {
             @Override
             public void run() {
                 CommonOperate commonOperate = new CommonOperate(key, secret, false);//创建新的操作
-                imageByte = resToBitmap(R.drawable.c032);
+                //imageByte = resToBitmap(R.drawable.c032);
                 try {
+                    fileInputStream = new FileInputStream("/sdcard/emolpic/tempImage.jpg");
+                    Bitmap bitmap  = BitmapFactory.decodeStream(fileInputStream);
+                    imageByte = bitmapToBytes(bitmap);
                     Response response = commonOperate.detectByte(imageByte, 0, return_attributes);
                     String returnMsg = new String(response.getContent());
 
+                    //通过handler+bundle+message向主线程传递消息，UI事件在主线程中处理
                     Message message = handler.obtainMessage();
                     message.what = UPDATE_UI;
                     Bundle bundle = new Bundle();
@@ -94,7 +99,7 @@ public class EmoHandler {
      * @param bitmapTemp
      * @return
      */
-    public byte[] bitMapToBytes(Bitmap bitmapTemp){
+    public byte[] bitmapToBytes(Bitmap bitmapTemp){
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
         bitmapTemp.compress(Bitmap.CompressFormat.JPEG, 40,baos);
         return baos.toByteArray();
