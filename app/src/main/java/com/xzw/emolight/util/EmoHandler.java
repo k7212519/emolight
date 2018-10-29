@@ -3,6 +3,9 @@ package com.xzw.emolight.util;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
 import android.util.Log;
 
 import com.megvii.cloud.http.CommonOperate;
@@ -17,32 +20,33 @@ import java.io.ByteArrayOutputStream;
 
 public class EmoHandler {
 
+    public static final int UPDATE_UI = 1;
+
     private String key = "FKiiXFhZOdvit2m07H0syi8HUf_1OmLz";
     private String secret = "0A_n-uNabUOjk8wvv4bh4ZGsLE8RH9Ps";
     private String return_attributes = "gender,age,smiling,facequality,emotion";
 
     private StringBuffer stringBuffer = new StringBuffer();
-    private String returnMsg;
+    private String msgExchange;
     private byte[] imageByte;
     private Context context;
-    private FaceInfo faceInfo;
+    //private FaceInfo faceInfo;
+    private Handler handler;
 
     String imageUrl = "https://gss2.bdstatic.com/9fo3dSag_xI4khGkpoWK1HF6hhy/baike/w%3D268%3Bg%3D0/sign=29390ab34ba98226b8c12c21b2b9de3c/9a504fc2d562853527205ae798ef76c6a6ef6330.jpg";
-    public EmoHandler(Context context, FaceInfo faceInfo) {
+    public EmoHandler(Context context, Handler handler) {
         //this.imageUrl = imageUrl;
-        this.faceInfo = faceInfo;
+        //this.faceInfo = faceInfo;
         this.context = context;
+        this.handler = handler;
     }
 
     public StringBuffer getStringBuffer() {
         return stringBuffer;
     }
 
-    public String getReturnMsg() {
-        return returnMsg;
-    }
 
-    public String detectFaceEmotion() {
+    public void detectFaceEmotion() {
         new Thread(new Runnable() {
             @Override
             public void run() {
@@ -50,15 +54,21 @@ public class EmoHandler {
                 imageByte = resToBitmap(R.drawable.c032);
                 try {
                     Response response = commonOperate.detectByte(imageByte, 0, return_attributes);
-                    returnMsg = new String(response.getContent());
+                    String returnMsg = new String(response.getContent());
                     Log.e("faceAttributes",stringBuffer.toString());
+
+                    Message message = handler.obtainMessage();
+                    message.what = UPDATE_UI;
+                    Bundle bundle = new Bundle();
+                    bundle.putString("returnMsg",returnMsg);
+                    message.setData(bundle);
+                    handler.sendMessage(message);
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
 
             }
         }).start();
-        return returnMsg;
     }
 
     /**

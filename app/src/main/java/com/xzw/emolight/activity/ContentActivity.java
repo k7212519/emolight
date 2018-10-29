@@ -18,12 +18,13 @@ import android.view.WindowManager;
 import android.widget.Button;
 
 import com.xzw.emolight.dialog.MyDialog;
-//import com.xzw.emolight.others.FaceInfo;
 import com.xzw.emolight.R;
+import com.xzw.emolight.others.FaceInfo;
 import com.xzw.emolight.util.EmoHandler;
 
 import java.io.File;
 import java.io.IOException;
+
 
 public class ContentActivity extends AppCompatActivity {
 
@@ -65,9 +66,24 @@ public class ContentActivity extends AppCompatActivity {
 
     }
 
+
+
     private void showDialog(){
         myDialog.show();
     }
+
+    private Handler handler= new Handler() {
+        public void handleMessage(Message message){
+            switch (message.what) {
+                case 1:
+                    String emo = message.getData().getString("returnMsg");
+                    Log.d("debug",emo);
+                    break;
+                default:
+                    break;
+            }
+        };
+    };
 
     /**
      * 7212519
@@ -126,12 +142,12 @@ public class ContentActivity extends AppCompatActivity {
                     startActivityForResult(intentCapture, 0);
                     break;
                 case R.id.btn_change_color:
+                    //FaceInfo faceInfo = new FaceInfo();
+                    EmoHandler emoHandler=new EmoHandler(ContentActivity.this, handler);
+                    emoHandler.detectFaceEmotion();
+                    //Log.d("debug", emo);
                     showDialog();
                     progress = 0;
-                    //FaceInfo faceInfo = new FaceInfo();
-                    //EmoHandler emoHandler=new EmoHandler(ContentActivity.this, faceInfo);
-                    //String emo = emoHandler.detectFaceEmotion();
-                    //Log.d("debug", emo);
                     break;
                 default:
                     break;
