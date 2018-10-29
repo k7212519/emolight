@@ -39,13 +39,6 @@ public class ContentActivity extends AppCompatActivity {
 
     protected boolean useThemeStatusBarColor = false;//是否使用特殊的标题栏背景颜色，android5.0以上可以设置状态栏背景色，如果不使用则使用透明色值
     protected boolean useStatusBarColor = true;//是否使用状态栏文字和图标为暗色，如果状态栏采用了白色系，则需要使状态栏和图标为暗色，android6.0以上可以设置
-    private static String key = "FKiiXFhZOdvit2m07H0syi8HUf_1OmLz";
-    private static String secret = "0A_n-uNabUOjk8wvv4bh4ZGsLE8RH9Ps";
-    String return_attributes = "gender,age,smiling,facequality,emotion";
-
-    private StringBuffer stringBuffer = new StringBuffer();
-    private Bitmap bitmap;
-    private byte[] imageByte=null;
     /*
     private CardViewOne cardViewOne;
     private CardViewTwo cardViewTwo;
@@ -129,62 +122,87 @@ public class ContentActivity extends AppCompatActivity {
                     startActivityForResult(intentCapture, 0);
                     break;
                 case R.id.btn_change_color:
-                    //EmoHandler emoHandler=new EmoHandler(ContentActivity.this);
-                    //String emo = emoHandler.detectFaceEmotion();
-                    //Log.e("emoContent", "emo");
-                    new Thread(new Runnable() {
-                        @Override
-                        public void run() {
-                            Resources res = ContentActivity.this.getResources();
-                            Bitmap bmp= BitmapFactory.decodeResource(res, R.mipmap.c032);
-                            CommonOperate commonOperate = new CommonOperate(key, secret, false);
-                            //FaceSetOperate faceSetOperate = new FaceSetOperate(key, secret, false);
-                            try {
-                                Response response = commonOperate.detectByte(getBytes(bmp), 0, return_attributes);
-                                //Response response = commonOperate.detectUrl(imageUrl, 0, null);
-                                String faceToken = getFaceToken(response);
-                                //stringBuffer.append("\n");
-                                stringBuffer.append(faceToken);
-                                Log.e("faceAttributes",stringBuffer.toString());
-                            } catch (Exception e) {
-                                e.printStackTrace();
-                            }
-
-                        }
-                    }).start();
+                    EmoHandler emoHandler=new EmoHandler(ContentActivity.this);
+                    String emo = emoHandler.detectFaceEmotion();
+                    Log.d("debug", emo);
                     break;
                 default:
                     break;
             }
         }
 
-        private String getFaceToken(Response response) throws JSONException {
-            if(response.getStatus() != 200){
-                return new String(response.getContent());
-            }
-            String res = new String(response.getContent());
-            Log.e("response", res);
-            JSONObject json = new JSONObject(res);
-            String faceToken = json.optJSONArray("faces").optJSONObject(0).optString("face_token");
-            return faceToken;
-        }
 
-        private byte[] getBitmap(int res){
-            Bitmap bitmap = BitmapFactory.decodeResource(getResources(), res);
-            ByteArrayOutputStream baos = new ByteArrayOutputStream();
-            bitmap.compress(Bitmap.CompressFormat.PNG, 100, baos);
-            return baos.toByteArray();
-        }
-
-        public byte[] getBytes(Bitmap bitmapTemp){
-            ByteArrayOutputStream baos = new ByteArrayOutputStream();
-            bitmapTemp.compress(Bitmap.CompressFormat.JPEG, 40,baos);
-            return baos.toByteArray();
-        }
 
 
     }
 
+    /**
+    private String getFaceEmotion(String attriButeStr) throws JSONException {
+
+        JSONObject json = new JSONObject(attriButeStr);
+        String emotion = json.optJSONArray("faces").optJSONObject(0).optJSONObject("attributes").optString("emotion");
+        happiness = json.optJSONArray("faces").optJSONObject(0).optJSONObject("attributes").optJSONObject("emotion").optDouble("happiness");
+        sadness = json.optJSONArray("faces").optJSONObject(0).optJSONObject("attributes").optJSONObject("emotion").optDouble("sadness");
+        neutral = json.optJSONArray("faces").optJSONObject(0).optJSONObject("attributes").optJSONObject("emotion").optDouble("neutral");
+        disgust = json.optJSONArray("faces").optJSONObject(0).optJSONObject("attributes").optJSONObject("emotion").optDouble("disgust");
+        anger = json.optJSONArray("faces").optJSONObject(0).optJSONObject("attributes").optJSONObject("emotion").optDouble("anger");
+        surprise = json.optJSONArray("faces").optJSONObject(0).optJSONObject("attributes").optJSONObject("emotion").optDouble("surprise");
+        fear = json.optJSONArray("faces").optJSONObject(0).optJSONObject("attributes").optJSONObject("emotion").optDouble("fear");
+        age = json.optJSONArray("faces").optJSONObject(0).optJSONObject("attributes").optJSONObject("age").optInt("value");
+        Intent intentSendMessage = new Intent();
+
+        if (age != 0) {
+            Intent intent = new Intent();
+            intent.setAction("updateEmotionText");
+            sendBroadcast(intent);
+            if (switchStatus == true) {
+                if (happiness > 50) {
+                    textViewEmotion.setText("开心");
+                    //if ( emotionColor!=1 ){
+                    emotionColor = 1;
+                    Log.e("tag", "happy大于50");
+                    sendIntMessage(intentSendMessage, 1, 1);
+                    //}
+                } else if (neutral > 70 || sadness > 30 || disgust > 30) {
+                    if (neutral > 60)
+                        textViewEmotion.setText("平静");
+                    else if (sadness > 60)
+                        textViewEmotion.setText("低落");
+                    else if (disgust > 60)
+                        textViewEmotion.setText("低落");
+                    //if (emotionColor != 3){
+                    emotionColor = 3;
+                    sendIntMessage(intentSendMessage, 1, 3);
+                    //}
+
+                } else if (surprise > 30 || anger > 30 || fear > 30) {
+                    if (surprise > 30)
+                        textViewEmotion.setText("惊讶");
+                    else if (anger > 30)
+                        textViewEmotion.setText("愤怒");
+                    else if (fear > 30)
+                        textViewEmotion.setText("害怕");
+                    //if (emotionColor!=2) {
+                    emotionColor = 2;
+                    sendIntMessage(intentSendMessage, 1, 2);
+                    //}
+                } else {
+                    //if (emotionColor!=1){
+                    //emotionColor = 1;
+                    //sendIntMessage(intentSendMessage,1,1);
+                    //}
+                }
+            }
+
+        }
+        Log.e("age",String.valueOf(age));
+        Log.e("happiness",String.valueOf(happiness));
+
+
+
+        return emotion;
+    }
+     **/
 
 
 }
