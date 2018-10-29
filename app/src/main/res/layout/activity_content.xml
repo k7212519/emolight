@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/colorStatusBar"
+    android:orientation="vertical"
+    android:id="@+id/layout_linear"
+    tools:context="com.xzw.emolight.activity.ContentActivity">
+
+
+    <!--    定义界面的标题栏和标题栏以下内容的布局
+            此处使用<include>标签引入标题栏，且下方有定义一个空的FrameLayout的布局。  -->
+    <include layout="@layout/layout_title_bar"></include>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:background="@color/colorBackground">
+
+        <include layout="@layout/card_view_1"></include>
+
+        <include layout="@layout/card_view_2"></include>
+
+        <include layout="@layout/card_view_3" />
+
+
+    </LinearLayout>
+    
+
+</LinearLayout>

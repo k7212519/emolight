@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context="com.xzw.emolight.activity.MainActivity">
+
+    <LinearLayout
+        android:layout_width="fill_parent"
+        android:layout_height="50dp"
+        android:layout_above="@id/img_ccx"
+        android:orientation="horizontal" >
+
+        <Button
+            android:id="@+id/btn_get_photo"
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
+            android:layout_weight="0.25"
+            android:text="拍照片"/>
+
+        <Button
+            android:id="@+id/btn_grey_photo"
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
+            android:layout_weight="0.25"
+            android:text="判断表情" />
+        <TextView
+            android:id="@+id/tv_output"
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
+            android:layout_weight="0.25"
+            android:gravity="center"
+            android:hint="表情" />
+        <Button
+            android:id="@+id/btn_goto_content"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_weight="0.25"
+            android:text="目录"
+            android:gravity="center" />
+    </LinearLayout>
+
+    <ImageView
+        android:id="@+id/img_ccx"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"/>
+
+</LinearLayout>
