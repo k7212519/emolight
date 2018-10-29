@@ -1,6 +1,5 @@
 package com.xzw.emolight.activity;
 
-import android.app.Dialog;
 import android.content.Intent;
 import android.graphics.Color;
 import android.net.Uri;
@@ -39,7 +38,7 @@ public class ContentActivity extends AppCompatActivity {
     private TextView textViewReturnMsg;
     private int progress = 0;
     private String[] MESSAGES = {"加载中","加载中.","加载中..","加载中..."};
-    private byte[] imageByte;
+//    private byte[] imageByte;
     /*
     private CardViewOne cardViewOne;
     private CardViewTwo cardViewTwo;
@@ -76,8 +75,16 @@ public class ContentActivity extends AppCompatActivity {
         myDialog.show();
     }
 
-    private Handler handler= new Handler() {
-        public void handleMessage(Message message){
+    /**
+     * 正确的handler写法，错误示例
+     * private Handler mHandler = new Handler(new Handler.Callback() {
+     *         public boolean handleMessage(Message msg) {
+     *             return false;
+     *         }
+     *     });
+     */
+    private Handler handler= new Handler(new Handler.Callback() {
+        public boolean handleMessage(Message message){
             switch (message.what) {
                 case 1:
                     String emo = message.getData().getString("returnMsg");
@@ -88,8 +95,9 @@ public class ContentActivity extends AppCompatActivity {
                 default:
                     break;
             }
-        };
-    };
+            return false;
+        }
+    });
 
     /**
      * 7212519
@@ -183,4 +191,5 @@ public class ContentActivity extends AppCompatActivity {
             }
         }
     }
+
 }
