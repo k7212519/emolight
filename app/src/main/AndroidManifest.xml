@@ -29,8 +29,7 @@
         android:theme="@style/AppTheme">
         <activity android:name=".activity.MainActivity">
             <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-                <category android:name="android.intent.category.LAUNCHER" />
+                <action android:name="android.intent.action.OLDMAIN" />
             </intent-filter>
         </activity>
 
@@ -47,7 +46,8 @@
         <activity android:name=".activity.ContentActivity"
             android:theme="@style/ContentActivityTheme">
             <intent-filter>
-                <action android:name="android.intent.action.COTENT" />
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
     </application>
