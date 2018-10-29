@@ -20,6 +20,7 @@ import android.widget.Button;
 import com.megvii.cloud.http.CommonOperate;
 import com.megvii.cloud.http.FaceSetOperate;
 import com.megvii.cloud.http.Response;
+import com.xzw.emolight.Others.FaceInfo;
 import com.xzw.emolight.R;
 import com.xzw.emolight.item.CardViewOne;
 import com.xzw.emolight.item.CardViewThree;
@@ -126,7 +127,8 @@ public class ContentActivity extends AppCompatActivity {
                     startActivityForResult(intentCapture, 0);
                     break;
                 case R.id.btn_change_color:
-                    EmoHandler emoHandler=new EmoHandler(ContentActivity.this);
+                    FaceInfo faceInfo = new FaceInfo();
+                    EmoHandler emoHandler=new EmoHandler(ContentActivity.this, faceInfo);
                     String emo = emoHandler.detectFaceEmotion();
                     Log.d("debug", emo);
                     break;
@@ -134,79 +136,5 @@ public class ContentActivity extends AppCompatActivity {
                     break;
             }
         }
-
-
-
-
     }
-
-    /**
-    private String getFaceEmotion(String attriButeStr) throws JSONException {
-
-        JSONObject json = new JSONObject(attriButeStr);
-        String emotion = json.optJSONArray("faces").optJSONObject(0).optJSONObject("attributes").optString("emotion");
-        happiness = json.optJSONArray("faces").optJSONObject(0).optJSONObject("attributes").optJSONObject("emotion").optDouble("happiness");
-        sadness = json.optJSONArray("faces").optJSONObject(0).optJSONObject("attributes").optJSONObject("emotion").optDouble("sadness");
-        neutral = json.optJSONArray("faces").optJSONObject(0).optJSONObject("attributes").optJSONObject("emotion").optDouble("neutral");
-        disgust = json.optJSONArray("faces").optJSONObject(0).optJSONObject("attributes").optJSONObject("emotion").optDouble("disgust");
-        anger = json.optJSONArray("faces").optJSONObject(0).optJSONObject("attributes").optJSONObject("emotion").optDouble("anger");
-        surprise = json.optJSONArray("faces").optJSONObject(0).optJSONObject("attributes").optJSONObject("emotion").optDouble("surprise");
-        fear = json.optJSONArray("faces").optJSONObject(0).optJSONObject("attributes").optJSONObject("emotion").optDouble("fear");
-        age = json.optJSONArray("faces").optJSONObject(0).optJSONObject("attributes").optJSONObject("age").optInt("value");
-        Intent intentSendMessage = new Intent();
-
-        if (age != 0) {
-            Intent intent = new Intent();
-            intent.setAction("updateEmotionText");
-            sendBroadcast(intent);
-            if (switchStatus == true) {
-                if (happiness > 50) {
-                    textViewEmotion.setText("开心");
-                    //if ( emotionColor!=1 ){
-                    emotionColor = 1;
-                    Log.e("tag", "happy大于50");
-                    sendIntMessage(intentSendMessage, 1, 1);
-                    //}
-                } else if (neutral > 70 || sadness > 30 || disgust > 30) {
-                    if (neutral > 60)
-                        textViewEmotion.setText("平静");
-                    else if (sadness > 60)
-                        textViewEmotion.setText("低落");
-                    else if (disgust > 60)
-                        textViewEmotion.setText("低落");
-                    //if (emotionColor != 3){
-                    emotionColor = 3;
-                    sendIntMessage(intentSendMessage, 1, 3);
-                    //}
-
-                } else if (surprise > 30 || anger > 30 || fear > 30) {
-                    if (surprise > 30)
-                        textViewEmotion.setText("惊讶");
-                    else if (anger > 30)
-                        textViewEmotion.setText("愤怒");
-                    else if (fear > 30)
-                        textViewEmotion.setText("害怕");
-                    //if (emotionColor!=2) {
-                    emotionColor = 2;
-                    sendIntMessage(intentSendMessage, 1, 2);
-                    //}
-                } else {
-                    //if (emotionColor!=1){
-                    //emotionColor = 1;
-                    //sendIntMessage(intentSendMessage,1,1);
-                    //}
-                }
-            }
-
-        }
-        Log.e("age",String.valueOf(age));
-        Log.e("happiness",String.valueOf(happiness));
-
-
-
-        return emotion;
-    }
-     **/
-
-
 }
