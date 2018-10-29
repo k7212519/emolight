@@ -3,6 +3,7 @@ package com.xzw.emolight.util;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Matrix;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -46,7 +47,18 @@ public class EmoHandler {
                 try {
                     fileInputStream = new FileInputStream("/sdcard/emolpic/tempImage.jpg");
                     Bitmap bitmap  = BitmapFactory.decodeStream(fileInputStream);
-                    imageByte = bitmapToBytes(bitmap);
+                    Matrix matrix = new Matrix();
+                    matrix.setRotate(90);
+                    Bitmap bitmapRotate = Bitmap.createBitmap(bitmap, 0, 0, bitmap.getWidth(),
+                            bitmap.getHeight(), matrix, false);
+//                    bitmap.recycle();
+
+//                    Bitmap bitmapRotate = bitmapRotate(bitmap,90);
+
+
+
+
+                    imageByte = bitmapToBytes(bitmapRotate);
                     Response response = commonOperate.detectByte(imageByte, 0, return_attributes);
                     String returnMsg = new String(response.getContent());
 
@@ -101,8 +113,32 @@ public class EmoHandler {
      */
     public byte[] bitmapToBytes(Bitmap bitmapTemp){
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
-        bitmapTemp.compress(Bitmap.CompressFormat.JPEG, 40,baos);
+        bitmapTemp.compress(Bitmap.CompressFormat.JPEG, 20,baos);
         return baos.toByteArray();
+    }
+
+    /**
+     * 选择变换
+     *
+     * @param origin 原图
+     * @param alpha  旋转角度，可正可负
+     * @return 旋转后的图片
+     */
+    private Bitmap bitmapRotate(Bitmap origin, float alpha, Bitmap newBitmap) {
+        if (origin == null) {
+            return null;
+        }
+        int width = origin.getWidth();
+        int height = origin.getHeight();
+        Matrix matrix = new Matrix();
+        matrix.setRotate(alpha);
+        // 围绕原地进行旋转
+        newBitmap = Bitmap.createBitmap(origin, 0, 0, width, height, matrix, false);
+        if (newBitmap.equals(origin)) {
+            return newBitmap;
+        }
+        origin.recycle();
+        return newBitmap;
     }
 
     /**

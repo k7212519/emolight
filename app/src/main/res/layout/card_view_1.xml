@@ -17,12 +17,24 @@
         android:layout_height="300dp"
         android:orientation="vertical">
 
-        <ImageView
+        <RelativeLayout
             android:id="@+id/image_card_one"
             android:layout_width="match_parent"
             android:layout_height="0dp"
-            android:src="@color/colorAccent"
-            android:layout_weight="7"/>
+            android:background="@color/colorAccent"
+            android:layout_weight="7">
+
+            <TextView
+                android:id="@+id/text_return_msg"
+                android:layout_width="300dp"
+                android:layout_height="wrap_content"
+                android:textSize="10sp"
+                android:textColor="@color/colorStatusBar"
+                android:layout_marginTop="20dp"
+                android:layout_marginLeft="20dp"/>
+
+
+        </RelativeLayout>
 
 
         <RelativeLayout

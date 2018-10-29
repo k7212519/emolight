@@ -16,6 +16,7 @@ import android.util.Log;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.Button;
+import android.widget.TextView;
 
 import com.xzw.emolight.dialog.MyDialog;
 import com.xzw.emolight.R;
@@ -35,6 +36,7 @@ public class ContentActivity extends AppCompatActivity {
     private TimeHandler timeHandler = new TimeHandler();
     private Uri imageUri;
     private MyDialog myDialog;
+    private TextView textViewReturnMsg;
     private int progress = 0;
     private String[] MESSAGES = {"加载中","加载中.","加载中..","加载中..."};
     private byte[] imageByte;
@@ -58,6 +60,7 @@ public class ContentActivity extends AppCompatActivity {
     private void initView() {
         Button btnChangeColor = findViewById(R.id.btn_change_color);
         Button btnCapture = findViewById(R.id.btn_capture);
+        textViewReturnMsg = findViewById(R.id.text_return_msg);
         btnCapture.setOnClickListener(new MyClickListener());
         btnChangeColor.setOnClickListener(new MyClickListener());
         myDialog = new MyDialog(this);
@@ -79,6 +82,7 @@ public class ContentActivity extends AppCompatActivity {
                 case 1:
                     String emo = message.getData().getString("returnMsg");
                     myDialog.cancel();
+                    textViewReturnMsg.setText(emo);
                     Log.d("debug",emo);
                     break;
                 default:
