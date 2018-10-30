@@ -83,7 +83,7 @@ public class MyDialog extends Dialog {
 
     private void loadImage(ImageView imageView,Context context,int resId) {
         Glide.with(context)
-                .load(resId)
+                .load(R.drawable.loading)
                 .into(imageView);
     }
 

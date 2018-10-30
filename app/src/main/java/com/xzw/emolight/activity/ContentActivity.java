@@ -8,10 +8,6 @@ import android.os.Environment;
 import android.os.Handler;
 import android.os.Message;
 import android.provider.MediaStore;
-import android.support.v4.app.DialogFragment;
-import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentTransaction;
 import android.support.v4.content.FileProvider;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -20,11 +16,11 @@ import android.view.View;
 import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.xzw.emolight.adapter.TitleBar;
 import com.xzw.emolight.dialog.MyDialog;
 import com.xzw.emolight.R;
-//import com.xzw.emolight.others.FaceInfo;
 import com.xzw.emolight.util.EmoHandler;
 
 import java.io.File;
@@ -37,12 +33,11 @@ public class ContentActivity extends AppCompatActivity {
     protected boolean useStatusBarColor = true;
     //是否使用状态栏文字和图标为暗色，如果状态栏采用了白色系，则需要使状态栏和图标为暗色，android6.0以上可以设置
     protected boolean useThemeStatusBarColor = false;
-//    private TimeHandler timeHandler = new TimeHandler();
     private Uri imageUri;
     private MyDialog myDialog;
     private TextView textViewReturnMsg;
     private TitleBar titleBar;
-    private int dialogImageResId;
+    private int dialogImageResId = R.drawable.loading;
 //    private byte[] imageByte;
     /*
     private CardViewOne cardViewOne;
@@ -75,22 +70,20 @@ public class ContentActivity extends AppCompatActivity {
         btnChangeColor.setOnClickListener(new MyClickListener());
         myDialog = new MyDialog(this, dialogImageResId);
 
+
         titleBar.setOnTitleClickListener(new TitleBar.TitleOnClickListener() {
             @Override
             public void onButtonOneClick() {
+                Toast.makeText(ContentActivity.this, "button1_clicked", Toast.LENGTH_SHORT).show();
                 Log.d("debug", "button1 clicked");
             }
 
             @Override
             public void onButtonTwoClick() {
-
+                startActivity(new Intent(ContentActivity.this, CameraKitActivity.class));
+                Toast.makeText(ContentActivity.this, "button2_clicked", Toast.LENGTH_SHORT).show();
             }
         });
-
-
-
-//        timeHandler.sendEmptyMessage(1);
-
     }
 
 
