@@ -3,19 +3,23 @@ package com.xzw.emolight.dialog;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.renderscript.RenderScript;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.bumptech.glide.Glide;
 import com.xzw.emolight.R;
 
 public class MyDialog extends Dialog {
 
-    private ProgressBar progressBar;
-    private TextView textProgress, textViewMsg;
+//    private ProgressBar progressBar;
+    private TextView textViewLoading;
+    private ImageView imageView;
 //    private Context context;
 
     public MyDialog(Context context) {
@@ -31,9 +35,9 @@ public class MyDialog extends Dialog {
         View view = layoutInflater.inflate(R.layout.dialog_progross, null);
         //加载布局
         LinearLayout linearLayout = view.findViewById(R.id.dialog_view);
-        progressBar = view.findViewById(R.id.pb_Circle);
-        textViewMsg = view.findViewById(R.id.tv_msg);
-        textProgress = view.findViewById(R.id.tv_progress);
+//        progressBar = view.findViewById(R.id.pb_Circle);
+        textViewLoading = view.findViewById(R.id.tv_msg);
+        imageView = view.findViewById(R.id.image_loading);
 
         //设置不可通过点击外面区域取消
         setCanceledOnTouchOutside(false);
@@ -49,15 +53,18 @@ public class MyDialog extends Dialog {
                 Toast.makeText(context,context.getString(R.string.resolved),Toast.LENGTH_SHORT).show();
             }
         });
+
+        loadImage(imageView, context);
+        textViewLoading.setText(R.string.loading);
     }
 
     // 设置加载信息
     public void setMessage(String msg){
-        textViewMsg.setText(msg);
+        textViewLoading.setText(msg);
     }
 
     //设置进度条
-    public void setProgressBar(ProgressBar progressBar) {
+    /*public void setProgressBar(ProgressBar progressBar) {
         this.progressBar = progressBar;
     }
 
@@ -70,6 +77,12 @@ public class MyDialog extends Dialog {
     public void setProgress(int progress){
         textProgress.setText(progress*100/progressBar.getMax() + "%");
         progressBar.setProgress(progress);
+    }*/
+
+    private void loadImage(ImageView imageView,Context context) {
+        Glide.with(context)
+                .load(R.drawable.loading)
+                .into(imageView);
     }
 
 }

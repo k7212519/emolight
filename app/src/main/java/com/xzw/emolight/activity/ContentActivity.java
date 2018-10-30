@@ -32,12 +32,10 @@ public class ContentActivity extends AppCompatActivity {
     protected boolean useStatusBarColor = true;
     //是否使用状态栏文字和图标为暗色，如果状态栏采用了白色系，则需要使状态栏和图标为暗色，android6.0以上可以设置
     protected boolean useThemeStatusBarColor = false;
-    private TimeHandler timeHandler = new TimeHandler();
+//    private TimeHandler timeHandler = new TimeHandler();
     private Uri imageUri;
     private MyDialog myDialog;
     private TextView textViewReturnMsg;
-    private int progress = 0;
-    private String[] MESSAGES = {"加载中","加载中.","加载中..","加载中..."};
 //    private byte[] imageByte;
     /*
     private CardViewOne cardViewOne;
@@ -64,8 +62,7 @@ public class ContentActivity extends AppCompatActivity {
         btnChangeColor.setOnClickListener(new MyClickListener());
         myDialog = new MyDialog(this);
 
-        myDialog.setMessage(this.getString(R.string.loading));
-        timeHandler.sendEmptyMessage(1);
+//        timeHandler.sendEmptyMessage(1);
 
     }
 
@@ -162,7 +159,6 @@ public class ContentActivity extends AppCompatActivity {
                     emoHandler.detectFaceEmotion();
                     //Log.d("debug", emo);
                     showDialog();
-                    progress = 0;
                     break;
                 default:
                     break;
@@ -173,7 +169,7 @@ public class ContentActivity extends AppCompatActivity {
     /**
      * 时间处理类
      */
-    class TimeHandler extends Handler {
+    /*class TimeHandler extends Handler {
         @Override
         public void handleMessage(Message msg) {
             switch (msg.what){
@@ -190,6 +186,6 @@ public class ContentActivity extends AppCompatActivity {
                     break;
             }
         }
-    }
+    }*/
 
 }

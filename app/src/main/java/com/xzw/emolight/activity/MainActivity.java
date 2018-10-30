@@ -251,6 +251,7 @@ public class MainActivity extends AppCompatActivity{
                             outputImage.delete();
                         }
                         outputImage.createNewFile();
+
                     } catch (IOException e) {
                         e.printStackTrace();
                     }
