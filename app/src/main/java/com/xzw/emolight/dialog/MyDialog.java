@@ -20,11 +20,13 @@ public class MyDialog extends Dialog {
 //    private ProgressBar progressBar;
     private TextView textViewLoading;
     private ImageView imageView;
+    private int resId;
 //    private Context context;
 
-    public MyDialog(Context context) {
+    public MyDialog(Context context, int resId) {
         super(context, R.style.transparent_dialog);
 //        this.context= context;
+        this.resId = resId;
         createLoadingDialog(context);
     }
 
@@ -54,7 +56,7 @@ public class MyDialog extends Dialog {
             }
         });
 
-        loadImage(imageView, context);
+        loadImage(imageView, context, resId);
         textViewLoading.setText(R.string.loading);
     }
 
@@ -79,9 +81,9 @@ public class MyDialog extends Dialog {
         progressBar.setProgress(progress);
     }*/
 
-    private void loadImage(ImageView imageView,Context context) {
+    private void loadImage(ImageView imageView,Context context,int resId) {
         Glide.with(context)
-                .load(R.drawable.loading)
+                .load(resId)
                 .into(imageView);
     }
 

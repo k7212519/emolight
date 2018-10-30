@@ -15,6 +15,7 @@
             android:id="@+id/image_title"
             android:layout_width="100dp"
             android:layout_height="match_parent"
+            android:clickable="true"
             android:layout_marginLeft="30dp"
             android:src="@drawable/image_title"
             />
@@ -23,17 +24,22 @@
             android:layout_width="35dp"
             android:layout_height="match_parent"
             android:layout_toLeftOf="@id/button2"
+            android:clickable="true"
             android:src="@drawable/image_button_1" />
+
         <ImageView
             android:id="@+id/button2"
             android:layout_width="35dp"
             android:layout_height="match_parent"
+            android:clickable="true"
             android:src="@drawable/image_button_2"
             android:layout_toLeftOf="@+id/button3" />
+
         <ImageView
             android:id="@+id/button3"
             android:layout_width="35dp"
             android:layout_height="match_parent"
+            android:clickable="true"
             android:src="@drawable/image_button_3"
             android:layout_alignParentRight="true"
             android:layout_marginRight="10dp"

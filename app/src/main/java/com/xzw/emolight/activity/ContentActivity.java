@@ -8,6 +8,10 @@ import android.os.Environment;
 import android.os.Handler;
 import android.os.Message;
 import android.provider.MediaStore;
+import android.support.v4.app.DialogFragment;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v4.content.FileProvider;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -17,6 +21,7 @@ import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.TextView;
 
+import com.xzw.emolight.adapter.TitleBar;
 import com.xzw.emolight.dialog.MyDialog;
 import com.xzw.emolight.R;
 //import com.xzw.emolight.others.FaceInfo;
@@ -36,6 +41,8 @@ public class ContentActivity extends AppCompatActivity {
     private Uri imageUri;
     private MyDialog myDialog;
     private TextView textViewReturnMsg;
+    private TitleBar titleBar;
+    private int dialogImageResId;
 //    private byte[] imageByte;
     /*
     private CardViewOne cardViewOne;
@@ -48,19 +55,39 @@ public class ContentActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_content);
         setUseStatusBarColor();     //设置状态栏沉浸
+        initData();
         initView();                 //初始化view
+    }
+
+    private void initData() {
+
     }
 
     /**
      * 初始化布局
      */
     private void initView() {
+        titleBar = findViewById(R.id.title_bar);
         Button btnChangeColor = findViewById(R.id.btn_change_color);
         Button btnCapture = findViewById(R.id.btn_capture);
         textViewReturnMsg = findViewById(R.id.text_return_msg);
         btnCapture.setOnClickListener(new MyClickListener());
         btnChangeColor.setOnClickListener(new MyClickListener());
-        myDialog = new MyDialog(this);
+        myDialog = new MyDialog(this, dialogImageResId);
+
+        titleBar.setOnTitleClickListener(new TitleBar.TitleOnClickListener() {
+            @Override
+            public void onButtonOneClick() {
+                Log.d("debug", "button1 clicked");
+            }
+
+            @Override
+            public void onRightClick() {
+
+            }
+        });
+
+
 
 //        timeHandler.sendEmptyMessage(1);
 
@@ -88,6 +115,15 @@ public class ContentActivity extends AppCompatActivity {
                     myDialog.cancel();
                     textViewReturnMsg.setText(emo);
                     Log.d("debug",emo);
+                    break;
+                case 2:
+                    /*if (TitleFragment.loadingImageSelect == 0) {
+                        dialogImageResId = R.drawable.loading;
+                    } else if (TitleFragment.loadingImageSelect == 1) {
+                        dialogImageResId = R.drawable.loading_duck;
+                    } else {
+                        dialogImageResId = R.drawable.loading;
+                    }*/
                     break;
                 default:
                     break;

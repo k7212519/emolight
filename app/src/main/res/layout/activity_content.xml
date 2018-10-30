@@ -11,7 +11,11 @@
 
     <!--    定义界面的标题栏和标题栏以下内容的布局
             此处使用<include>标签引入标题栏，且下方有定义一个空的FrameLayout的布局。  -->
-    <include layout="@layout/layout_title_bar"></include>
+    <com.xzw.emolight.adapter.TitleBar
+        android:id="@+id/title_bar"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content">
+    </com.xzw.emolight.adapter.TitleBar>
 
     <LinearLayout
         android:layout_width="match_parent"
