@@ -82,7 +82,7 @@ public class ContentActivity extends AppCompatActivity {
             }
 
             @Override
-            public void onRightClick() {
+            public void onButtonTwoClick() {
 
             }
         });

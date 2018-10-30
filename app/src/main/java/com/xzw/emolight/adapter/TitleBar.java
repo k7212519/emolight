@@ -12,6 +12,8 @@ import com.xzw.emolight.R;
 public class TitleBar extends RelativeLayout {
 
     private ImageView btn1;
+    private ImageView btn2;
+    private ImageView btn3;
 
     /**
      * 标题的点击事件
@@ -26,15 +28,14 @@ public class TitleBar extends RelativeLayout {
         super(context, attrs);
         LayoutInflater.from(context).inflate(R.layout.layout_title_bar, this, true);
         btn1 = findViewById(R.id.button1);
+        btn2 = findViewById(R.id.button2);
+        btn3 = findViewById(R.id.button3);
 
-        btn1.setOnClickListener(new OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (titleOnClickListener != null) {
-                    titleOnClickListener.onButtonOneClick();
-                }
-            }
-        });
+        MyButtonOnClickListener myButtonOnClickListener = new MyButtonOnClickListener();
+        btn1.setOnClickListener( myButtonOnClickListener);
+        btn2.setOnClickListener(myButtonOnClickListener);
+        btn3.setOnClickListener(myButtonOnClickListener);
+
     }
 
     /**
@@ -58,7 +59,30 @@ public class TitleBar extends RelativeLayout {
         /**
          * 保存按钮的点击事件
          */
-        void onRightClick();
+        void onButtonTwoClick();
 
+    }
+
+    class MyButtonOnClickListener implements OnClickListener {
+
+        @Override
+        public void onClick(View v) {
+            switch (v.getId()) {
+                case R.id.button1:
+                    if (titleOnClickListener != null) {
+                        titleOnClickListener.onButtonOneClick();
+                    }
+                    break;
+                case R.id.button2:
+                    if (titleOnClickListener != null) {
+                        titleOnClickListener.onButtonTwoClick();
+                    }
+                    break;
+                case R.id.button3:
+                    break;
+                default:
+                    break;
+            }
+        }
     }
 }
