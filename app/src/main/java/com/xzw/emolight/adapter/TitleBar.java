@@ -51,15 +51,12 @@ public class TitleBar extends RelativeLayout {
      * 监听标题点击接口
      */
     public interface TitleOnClickListener {
-        /**
-         * 返回按钮的点击事件
-         */
+
         void onButtonOneClick();
 
-        /**
-         * 保存按钮的点击事件
-         */
         void onButtonTwoClick();
+
+        void onButtonThreeClick();
 
     }
 
@@ -79,6 +76,9 @@ public class TitleBar extends RelativeLayout {
                     }
                     break;
                 case R.id.button3:
+                    if (titleOnClickListener != null) {
+                        titleOnClickListener.onButtonThreeClick();
+                    }
                     break;
                 default:
                     break;

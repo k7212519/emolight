@@ -42,7 +42,8 @@ public class CameraKitActivity extends Activity{
                 camera.captureImage(new CameraKitEventCallback<CameraKitImage>() {
                     @Override
                     public void callback(CameraKitImage cameraKitImage) {
-                        imageCaptured(cameraKitImage);
+                        //返回CameraKitImage类型文件，使用imageCaptured()方法转bitmap
+                        imageToBitmap(cameraKitImage);
                     }
                 });
             }
@@ -69,7 +70,11 @@ public class CameraKitActivity extends Activity{
         camera.stop();
     }
 
-    public void imageCaptured(CameraKitImage cameraKitImage) {
+    /**
+     * cameraKitImage转bitmap
+     * @param cameraKitImage
+     */
+    public void imageToBitmap(CameraKitImage cameraKitImage) {
         Bitmap bitmap = cameraKitImage.getBitmap();
         Toast.makeText(CameraKitActivity.this, "imageDetected", Toast.LENGTH_SHORT).show();
     }

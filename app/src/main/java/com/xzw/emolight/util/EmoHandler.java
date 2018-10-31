@@ -45,6 +45,7 @@ public class EmoHandler {
                 CommonOperate commonOperate = new CommonOperate(key, secret, false);//创建新的操作
                 //imageByte = resToBitmap(R.drawable.c032);
                 try {
+                    //从sdcard读取保存的文件
                     fileInputStream = new FileInputStream("/sdcard/emolpic/tempImage.jpg");
                     Bitmap bitmap  = BitmapFactory.decodeStream(fileInputStream);
                     Matrix matrix = new Matrix();

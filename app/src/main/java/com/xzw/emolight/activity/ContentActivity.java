@@ -8,6 +8,7 @@ import android.os.Environment;
 import android.os.Handler;
 import android.os.Message;
 import android.provider.MediaStore;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v4.content.FileProvider;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -19,6 +20,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.xzw.emolight.adapter.TitleBar;
+import com.xzw.emolight.dialog.CameraCaptureDialog;
 import com.xzw.emolight.dialog.MyDialog;
 import com.xzw.emolight.R;
 import com.xzw.emolight.util.EmoHandler;
@@ -83,6 +85,15 @@ public class ContentActivity extends AppCompatActivity {
                 startActivity(new Intent(ContentActivity.this, CameraKitActivity.class));
                 Toast.makeText(ContentActivity.this, "button2_clicked", Toast.LENGTH_SHORT).show();
             }
+
+            public void onButtonThreeClick() {
+                CameraCaptureDialog cameraCaptureDialog = new CameraCaptureDialog();
+                FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
+                //设置dialogFragment进场动画
+                fragmentTransaction.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN);
+                cameraCaptureDialog.show(fragmentTransaction, "cameraCapDialog");
+            }
+
         });
     }
 
@@ -176,8 +187,10 @@ public class ContentActivity extends AppCompatActivity {
         public void onClick(View v) {
             switch (v.getId()) {
                 case R.id.btn_capture:
-                    fileHandler();//新建image文件
+                    fileHandler();
+                    //新建image文件
                     Intent intentCapture = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+                    //将activity返回的文件存入imageUri
                     intentCapture.putExtra(MediaStore.EXTRA_OUTPUT, imageUri);
 //                    intentCapture.putExtra(MediaStore.EXTRA_OUTPUT, imageByte);imageByte报null 不知道原因
                     startActivityForResult(intentCapture, 0);
