@@ -17,9 +17,27 @@
         android:layout_height="wrap_content"
         android:layout_centerHorizontal="true"
         android:layout_alignBottom="@+id/camera_kit_in_dialog"
-        android:layout_marginBottom="20dp"
+        android:layout_marginBottom="50dp"
         android:text="@string/app_name"
         android:textSize="20dp" />
+
+    <ImageView
+        android:id="@+id/img_scan"
+        android:layout_width="280dp"
+        android:layout_height="400dp"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="90dp"
+        android:src="@drawable/scan_frame2"
+        android:alpha="0.6" />
+
+    <ImageView
+        android:layout_width="240dp"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:layout_centerVertical="true"
+        android:src="@drawable/scan_line"
+        android:alpha="0.6"
+        />
 
 
 </RelativeLayout>
