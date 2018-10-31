@@ -1,5 +1,6 @@
 package com.xzw.emolight.activity;
 
+import android.app.Dialog;
 import android.content.Intent;
 import android.graphics.Color;
 import android.net.Uri;
@@ -37,6 +38,7 @@ public class ContentActivity extends AppCompatActivity {
     protected boolean useThemeStatusBarColor = false;
     private Uri imageUri;
     private MyDialog myDialog;
+    private CameraCaptureDialog cameraCaptureDialog;
     private TextView textViewReturnMsg;
     private TitleBar titleBar;
     private int dialogImageResId = R.drawable.loading;
@@ -87,7 +89,7 @@ public class ContentActivity extends AppCompatActivity {
             }
 
             public void onButtonThreeClick() {
-                CameraCaptureDialog cameraCaptureDialog = new CameraCaptureDialog();
+                cameraCaptureDialog = new CameraCaptureDialog();
                 FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
                 //设置dialogFragment进场动画
                 fragmentTransaction.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN);
