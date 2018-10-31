@@ -13,4 +13,5 @@
     <color name="colorWhite">#ffffff</color>
 
     <color name="colorButtonPressed">#eeeeee</color>
+    <color name="colorPrimaryReallyDark">#131B1F</color>
 </resources>

@@ -1,17 +1,26 @@
 package com.xzw.emolight.activity;
 
 import android.app.Activity;
+import android.graphics.Bitmap;
 import android.support.annotation.Nullable;
 import android.os.Bundle;
+import android.view.View;
+import android.widget.Button;
+import android.widget.Toast;
 
 import com.wonderkiln.camerakit.CameraKit;
+import com.wonderkiln.camerakit.CameraKitEventCallback;
+import com.wonderkiln.camerakit.CameraKitImage;
 import com.wonderkiln.camerakit.CameraView;
 import com.xzw.emolight.R;
 
 public class CameraKitActivity extends Activity{
 
     private int cameraMethod = CameraKit.Constants.METHOD_STANDARD;
-    private CameraView cameraView;
+
+    Button button;
+
+    private CameraView camera;
     private boolean cropOutput = false;
 
     @Override
@@ -21,10 +30,23 @@ public class CameraKitActivity extends Activity{
 
 
         //下次使用butterknife框架
-        cameraView = findViewById(R.id.camera_kit);
+        camera = findViewById(R.id.camera_kit);
         //设置camera属性
-        cameraView.setMethod(cameraMethod);
-        cameraView.setCropOutput(cropOutput);
+        camera.setMethod(cameraMethod);
+        camera.setCropOutput(cropOutput);
+        button = findViewById(R.id.btn_cap);
+
+        button.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                camera.captureImage(new CameraKitEventCallback<CameraKitImage>() {
+                    @Override
+                    public void callback(CameraKitImage cameraKitImage) {
+                        imageCaptured(cameraKitImage);
+                    }
+                });
+            }
+        });
     }
 
     @Nullable
@@ -38,13 +60,17 @@ public class CameraKitActivity extends Activity{
     @Override
     public void onResume() {
         super.onResume();
-        cameraView.start();
-        cameraView.captureImage();
+        camera.start();
     }
 
     @Override
     public void onPause() {
         super.onPause();
-        cameraView.stop();
+        camera.stop();
+    }
+
+    public void imageCaptured(CameraKitImage cameraKitImage) {
+        Bitmap bitmap = cameraKitImage.getBitmap();
+        Toast.makeText(CameraKitActivity.this, "imageDetected", Toast.LENGTH_SHORT).show();
     }
 }
