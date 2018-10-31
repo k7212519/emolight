@@ -13,31 +13,45 @@
 
     <Button
         android:id="@+id/btn_scan"
+        style="@style/Base.Widget.AppCompat.Button.Borderless"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_centerHorizontal="true"
         android:layout_alignBottom="@+id/camera_kit_in_dialog"
+        android:layout_centerHorizontal="true"
         android:layout_marginBottom="50dp"
-        android:text="@string/app_name"
-        android:textSize="20dp" />
+        android:text="@string/start_scan"
+        android:textColor="@color/colorScanText"
+        android:textSize="16dp"
+        android:alpha="0.6"/>
 
-    <ImageView
-        android:id="@+id/img_scan"
+    <RelativeLayout
+        android:id="@+id/layout_scan"
         android:layout_width="280dp"
-        android:layout_height="400dp"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="90dp"
-        android:src="@drawable/scan_frame2"
-        android:alpha="0.6" />
-
-    <ImageView
-        android:layout_width="240dp"
         android:layout_height="wrap_content"
-        android:layout_centerHorizontal="true"
-        android:layout_centerVertical="true"
-        android:src="@drawable/scan_line"
-        android:alpha="0.6"
-        />
+        android:layout_centerHorizontal="true">
+
+        <ImageView
+            android:id="@+id/img_scan_frame"
+            android:layout_width="280dp"
+            android:layout_height="400dp"
+            android:layout_marginTop="90dp"
+            android:src="@drawable/scan_frame2"
+            android:alpha="0.6" />
+
+        <ImageView
+            android:id="@+id/img_scan_line"
+            android:layout_width="240dp"
+            android:layout_height="30dp"
+            android:layout_marginTop="120dp"
+            android:layout_centerHorizontal="true"
+            android:visibility="invisible"
+            android:src="@drawable/scan_line"
+            android:alpha="0.6"
+            />
+    </RelativeLayout>
+
+
+
 
 
 </RelativeLayout>

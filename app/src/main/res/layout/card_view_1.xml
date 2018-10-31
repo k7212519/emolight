@@ -44,23 +44,23 @@
 
             <Button
                 android:id="@+id/btn_capture"
+                style="@style/Base.Widget.AppCompat.Button.Borderless"
                 android:layout_width="60dp"
                 android:layout_height="wrap_content"
                 android:layout_alignBottom="@+id/btn_change_color"
                 android:layout_toLeftOf="@id/btn_change_color"
-                android:background="@color/colorBlank"
                 android:text="@string/capture"
                 android:textColor="@color/colorTextGray"
                 android:textSize="15sp" />
 
             <Button
                 android:id="@+id/btn_change_color"
+                style="@style/Base.Widget.AppCompat.Button.Borderless"
                 android:layout_width="60dp"
                 android:layout_height="wrap_content"
                 android:layout_alignParentRight="true"
                 android:layout_alignParentBottom="true"
                 android:layout_marginRight="20dp"
-                android:background="@color/colorBlank"
                 android:text="@string/change_color"
                 android:textColor="@color/colorTextGray"
                 android:textSize="15sp" />
