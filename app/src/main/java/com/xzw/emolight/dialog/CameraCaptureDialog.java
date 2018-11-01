@@ -5,6 +5,7 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.res.Resources;
 import android.os.Bundle;
+import android.os.Vibrator;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.DialogFragment;
@@ -80,6 +81,8 @@ public class CameraCaptureDialog extends DialogFragment {
                     case MotionEvent.ACTION_DOWN:
                         controlLineAnim(imageViewScanLine, ACTION_START);
                         controlFrameAnim(btnScanImgFrame, ACTION_END);
+                        Vibrator vibrator = (Vibrator)getContext().getSystemService(getContext().VIBRATOR_SERVICE);
+                        vibrator.vibrate(11);
                         break;
                     case MotionEvent.ACTION_UP:
                         controlFrameAnim(btnScanImgFrame, ACTION_START);
