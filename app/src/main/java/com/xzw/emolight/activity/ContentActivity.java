@@ -1,6 +1,5 @@
 package com.xzw.emolight.activity;
 
-import android.app.Dialog;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.Color;
@@ -33,6 +32,8 @@ import java.io.IOException;
 
 public class ContentActivity extends AppCompatActivity{
 
+    public final static int ACTION_MESSAGE_EMOTION = 1;
+
     //是否使用特殊的标题栏背景颜色，android5.0以上可以设置状态栏背景色，如果不使用则使用透明色值
     protected boolean useStatusBarColor = true;
     //是否使用状态栏文字和图标为暗色，如果状态栏采用了白色系，则需要使状态栏和图标为暗色，android6.0以上可以设置
@@ -45,7 +46,6 @@ public class ContentActivity extends AppCompatActivity{
     private int dialogImageResId = R.drawable.loading;
     private Bitmap bitmapReceived;
     private EmoHandler emoHandler;
-//    private byte[] imageByte;
     /*
     private CardViewOne cardViewOne;
     private CardViewTwo cardViewTwo;
@@ -58,7 +58,7 @@ public class ContentActivity extends AppCompatActivity{
         setContentView(R.layout.activity_content);
         setUseStatusBarColor();     //设置状态栏沉浸
         initData();
-        initView();                 //初始化view
+        initView();
     }
 
     private void initData() {
@@ -78,6 +78,7 @@ public class ContentActivity extends AppCompatActivity{
         myDialog = new MyDialog(this, dialogImageResId);
 
 
+        //title中三个按钮的事件
         titleBar.setOnTitleClickListener(new TitleBar.TitleOnClickListener() {
             @Override
             public void onButtonOneClick() {
@@ -92,38 +93,9 @@ public class ContentActivity extends AppCompatActivity{
             }
 
             public void onButtonThreeClick() {
-                cameraCaptureDialog = new CameraCaptureDialog();
-                FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
-                //设置dialogFragment进场动画
-                fragmentTransaction.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN);
-                cameraCaptureDialog.setOnCaptureDialogFragmentListener(new CameraCaptureDialog.OnCaptureDialogFragmentListener() {
-                    @Override
-                    public void onHandleBitmap(Bitmap bitmapTmp) {
-                        Log.d("debug", "received");
-                        bitmapReceived = bitmapTmp;
-                        if (bitmapReceived != null) {
-                            emoHandler.bitmapToFile(bitmapReceived,"/sdcard/emolpic/Fragment.jpg");
-                            emoHandler.detectFaceEmotion("/sdcard/emolpic/Fragment.jpg");
-                        }
-                        //cameraCaptureDialog.dismiss();
-                        //emoHandler.detectFaceEmotion("fragmentCapture");
-
-
-                    }
-                });
-                cameraCaptureDialog.show(fragmentTransaction, "cameraCapDialog");
 
             }
-
         });
-
-
-    }
-
-
-
-    private void showDialog(){
-        myDialog.show();
     }
 
     /**
@@ -137,9 +109,12 @@ public class ContentActivity extends AppCompatActivity{
     private Handler handler= new Handler(new Handler.Callback() {
         public boolean handleMessage(Message message){
             switch (message.what) {
-                case 1:
-                    String emo = message.getData().getString("returnMsg");
+                case ACTION_MESSAGE_EMOTION:
+                    String emo = message.getData().getString("returnEmoMsg");
+
+                    //TODO 调用系统相机会闪退，需要判断cameraCapture状态
                     cameraCaptureDialog.dismiss();
+
                     myDialog.cancel();
                     textViewReturnMsg.setText(emo);
                     Log.d("debug",emo);
@@ -179,18 +154,20 @@ public class ContentActivity extends AppCompatActivity{
             WindowManager.LayoutParams localLayoutParams = getWindow().getAttributes();
             localLayoutParams.flags = (WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS | localLayoutParams.flags);
         }
-
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M && useStatusBarColor) {//android6.0以后可以对状态栏文字颜色和图标进行修改
-            getWindow().getDecorView().setSystemUiVisibility( View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN|View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR);
+        //android6.0以后可以对状态栏文字颜色和图标进行修改
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M && useStatusBarColor) {
+            getWindow().getDecorView().setSystemUiVisibility(
+                    View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN|View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR);
         }
     }
 
     /**
-     * 文件处理，拍照存储到本地目录
+     * 调用系统相机获取图片 存到imageUri
      */
-    public void fileHandler(String lastName) {
+    private void getImgBySys(String imgFileName) {
+        //新建image文件
         File dir = new File(Environment.getExternalStorageDirectory() + "/emolpic");
-        File outputImage = new File(Environment.getExternalStorageDirectory()+"/emolpic",lastName+".jpg");
+        File outputImage = new File(Environment.getExternalStorageDirectory()+"/emolpic",imgFileName);
         try {
             if (!dir.exists()) {
                 dir.mkdirs();
@@ -203,32 +180,56 @@ public class ContentActivity extends AppCompatActivity{
             e.printStackTrace();
         }
         imageUri = FileProvider.getUriForFile(getBaseContext(), "com.chc.photo.fileProvider", outputImage);
+        //将activity返回的文件存入imageUri
+        Intent intentCapture = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+        intentCapture.putExtra(MediaStore.EXTRA_OUTPUT, imageUri);
+        startActivityForResult(intentCapture, 0);
     }
 
 
+    /**
+     * cardview1 按键响应
+     */
     class MyClickListener implements View.OnClickListener {
         @Override
         public void onClick(View v) {
             switch (v.getId()) {
                 case R.id.btn_capture:
-                    fileHandler("capture");
-                    //新建image文件
-                    Intent intentCapture = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-                    //将activity返回的文件存入imageUri
-                    intentCapture.putExtra(MediaStore.EXTRA_OUTPUT, imageUri);
-//                    intentCapture.putExtra(MediaStore.EXTRA_OUTPUT, imageByte);imageByte报null 不知道原因
-                    startActivityForResult(intentCapture, 0);
+                    cameraCaptureDialog = new CameraCaptureDialog();
+                    FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
+                    //设置dialogFragment进场动画
+                    fragmentTransaction.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN);
+
+                    //对cameraCaptureDialog设置监听
+                    cameraCaptureDialog.setOnCaptureDialogFragmentListener(
+                            new CameraCaptureDialog.OnCaptureDialogFragmentListener() {
+                                @Override
+                                public void onHandleBitmap(Bitmap bitmapTmp) {
+                                    Log.d("debug", "received");
+                                    bitmapReceived = bitmapTmp;
+                                    if (bitmapReceived != null) {
+                                        //将接收到的bitmap文件存入sdcard/emolpic/faceIng.jpg
+                                        emoHandler.createFile(bitmapReceived,
+                                                Environment.getExternalStorageDirectory()+"/emolpic/"+"faceImg.jpg");
+                                        //从sdcard加载文件进行解析，通过handler解析返回值
+                                        emoHandler.detectFaceEmotion(
+                                                Environment.getExternalStorageDirectory()+"/emolpic/"+"faceImg.jpg", 180);
+                                    }
+                                }
+                            });
+                    cameraCaptureDialog.show(fragmentTransaction, "cameraCapDialog");
                     break;
                 case R.id.btn_change_color:
                     //FaceInfo faceInfo = new FaceInfo();
-                    emoHandler.detectFaceEmotion("capture");
+                    emoHandler.detectFaceEmotion(Environment.getExternalStorageDirectory()+"/emolpic/"+"imgBySys.jpg", 90);
                     //Log.d("debug", emo);
-                    showDialog();
+                    myDialog.show();
                     break;
                 default:
                     break;
             }
         }
     }
+
 
 }

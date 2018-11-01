@@ -1,17 +1,22 @@
 package com.xzw.emolight.util;
 
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Matrix;
+import android.net.Uri;
 import android.os.Bundle;
+import android.os.Environment;
 import android.os.Handler;
 import android.os.Message;
+import android.provider.MediaStore;
 import android.util.Log;
 
 import com.megvii.cloud.http.CommonOperate;
 import com.megvii.cloud.http.Response;
 import com.xzw.emolight.R;
+import com.xzw.emolight.activity.ContentActivity;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -24,8 +29,6 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 
 public class EmoHandler {
-
-    public static final int UPDATE_UI = 1;
 
     private String key = "FKiiXFhZOdvit2m07H0syi8HUf_1OmLz";
     private String secret = "0A_n-uNabUOjk8wvv4bh4ZGsLE8RH9Ps";
@@ -42,38 +45,21 @@ public class EmoHandler {
     }
 
 
-    public void detectFaceEmotion(final String path) {
+    public void detectFaceEmotion(final String path, final float rotated) {
         new Thread(new Runnable() {
             @Override
             public void run() {
                 CommonOperate commonOperate = new CommonOperate(key, secret, false);//创建新的操作
-                //imageByte = resToBitmap(R.drawable.c032);
                 try {
                     //从sdcard读取保存的文件
                     fileInputStream = new FileInputStream(path);
                     Bitmap bitmap  = BitmapFactory.decodeStream(fileInputStream);
-                    Matrix matrix = new Matrix();
-                    matrix.setRotate(180);
-                    Bitmap bitmapRotate = Bitmap.createBitmap(bitmap, 0, 0, bitmap.getWidth(),
-                            bitmap.getHeight(), matrix, false);
-//                    bitmap.recycle();
-
-//                    Bitmap bitmapRotate = bitmapRotate(bitmap,90);
-
-
-
-
-                    imageByte = bitmapToBytes(bitmapRotate);
+                    imageByte = bitmapToBytes(bitmapRotated(bitmap,rotated));
                     Response response = commonOperate.detectByte(imageByte, 0, return_attributes);
                     String returnMsg = new String(response.getContent());
 
-                    //通过handler+bundle+message向主线程传递消息，UI事件在主线程中处理
-                    Message message = handler.obtainMessage();
-                    message.what = UPDATE_UI;
-                    Bundle bundle = new Bundle();
-                    bundle.putString("returnMsg",returnMsg);
-                    message.setData(bundle);
-                    handler.sendMessage(message);
+                    //信息返回给主线程
+                    sendMsg(returnMsg);
 
                 } catch (Exception e) {
                     e.printStackTrace();
@@ -100,21 +86,13 @@ public class EmoHandler {
         return faceToken;
     }
 
-    /**
-     * 图片资源转byte[]
-     * @param res
-     * @return
-     */
-    public byte[] resToBitmap(int res){
-        Bitmap bitmap = BitmapFactory.decodeResource(context.getResources(), res);
-        ByteArrayOutputStream baos = new ByteArrayOutputStream();
-        bitmap.compress(Bitmap.CompressFormat.PNG, 100, baos);
-        return baos.toByteArray();
-    }
-
-    public void bitmapToFile(Bitmap bitmap, String path) {
-        File file = new File(path);
+    public void createFile(Bitmap bitmap, String path) {
+        File dir = new File(Environment.getExternalStorageDirectory() + "/emolpic");
         try {
+            if (!dir.exists()) {
+                dir.mkdirs();
+            }
+            File file = new File(path);
             BufferedOutputStream bos = new BufferedOutputStream(new FileOutputStream(file));
             bitmap.compress(Bitmap.CompressFormat.JPEG, 100, bos);
             bos.flush();
@@ -137,27 +115,28 @@ public class EmoHandler {
     }
 
     /**
-     * 选择变换
-     *
-     * @param origin 原图
-     * @param alpha  旋转角度，可正可负
-     * @return 旋转后的图片
+     * 图片旋转
+     * @param originBitmap
+     * @param alpha
+     * @return
      */
-    private Bitmap bitmapRotate(Bitmap origin, float alpha, Bitmap newBitmap) {
-        if (origin == null) {
-            return null;
-        }
-        int width = origin.getWidth();
-        int height = origin.getHeight();
+    private Bitmap bitmapRotated(Bitmap originBitmap, float alpha) {
         Matrix matrix = new Matrix();
         matrix.setRotate(alpha);
-        // 围绕原地进行旋转
-        newBitmap = Bitmap.createBitmap(origin, 0, 0, width, height, matrix, false);
-        if (newBitmap.equals(origin)) {
-            return newBitmap;
-        }
-        origin.recycle();
-        return newBitmap;
+        Bitmap bitmapRotate = Bitmap.createBitmap(
+                originBitmap, 0, 0, originBitmap.getWidth(),
+                originBitmap.getHeight(), matrix, false);
+        return bitmapRotate;
+    }
+
+    private void sendMsg(String returnMsg) {
+        //通过handler+bundle+message向主线程传递消息，UI事件在主线程中处理
+        Message message = handler.obtainMessage();
+        message.what = ContentActivity.ACTION_MESSAGE_EMOTION;
+        Bundle bundle = new Bundle();
+        bundle.putString("returnEmoMsg",returnMsg);
+        message.setData(bundle);
+        handler.sendMessage(message);
     }
 
     /**
