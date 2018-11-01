@@ -1,8 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    >
+    android:layout_height="match_parent">
 
         <com.wonderkiln.camerakit.CameraView
             android:id="@+id/camera_kit_in_dialog"
@@ -11,18 +10,55 @@
             android:adjustViewBounds="false" />
 
 
-    <Button
-        android:id="@+id/btn_scan"
-        style="@style/Base.Widget.AppCompat.Button.Borderless"
+    <LinearLayout
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_height="110dp"
+        android:orientation="vertical"
         android:layout_alignBottom="@+id/camera_kit_in_dialog"
         android:layout_centerHorizontal="true"
-        android:layout_marginBottom="50dp"
-        android:text="@string/start_scan"
-        android:textColor="@color/colorScanText"
-        android:textSize="16dp"
-        android:alpha="0.6"/>
+        android:gravity="center"
+        android:layout_marginBottom="50dp">
+
+
+
+        <FrameLayout
+            android:layout_width="wrap_content"
+            android:layout_height="0dp"
+            android:layout_weight="3">
+
+            <ImageView
+                android:id="@+id/img_scan_btn_face"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:layout_marginBottom="10dp"
+                android:src="@drawable/scan_button" />
+
+            <ImageView
+                android:id="@+id/img_scan_btn_frame"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:layout_marginBottom="10dp"
+                android:src="@drawable/scan_button_frame"/>
+
+        </FrameLayout>
+
+
+        <Button
+            android:id="@+id/btn_scan"
+            style="@style/Base.Widget.AppCompat.Button.Borderless"
+            android:layout_width="wrap_content"
+            android:layout_height="0dp"
+            android:layout_weight="2"
+            android:text="@string/start_scan"
+            android:textColor="@color/colorWhite"
+            android:clickable="false"
+            android:textSize="14sp" />
+
+    </LinearLayout>
+
+
 
     <RelativeLayout
         android:id="@+id/layout_scan"
@@ -36,7 +72,7 @@
             android:layout_height="400dp"
             android:layout_marginTop="90dp"
             android:src="@drawable/scan_frame2"
-            android:alpha="0.6" />
+            android:alpha="1" />
 
         <ImageView
             android:id="@+id/img_scan_line"
@@ -46,7 +82,7 @@
             android:layout_centerHorizontal="true"
             android:visibility="invisible"
             android:src="@drawable/scan_line"
-            android:alpha="0.6"
+            android:alpha="1"
             />
     </RelativeLayout>
 

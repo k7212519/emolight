@@ -1,5 +1,6 @@
 package com.xzw.emolight.dialog;
 
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Context;
 import android.content.res.Resources;
@@ -13,6 +14,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
+import android.view.animation.ScaleAnimation;
 import android.view.animation.TranslateAnimation;
 import android.widget.Button;
 import android.widget.ImageView;
@@ -24,15 +26,20 @@ import com.xzw.emolight.R;
 
 public class CameraCaptureDialog extends DialogFragment {
 
+    private static int ACTION_START = 0;
+    private static int ACTION_END = 1;
     //camera属性：直接从view截取
     private int cameraMethod = CameraKit.Constants.METHOD_STILL;
     //camera属性：使用前置镜头
     private int cameraFace = CameraKit.Constants.FACING_FRONT;
     private boolean cropOutput = true;
+    private ImageView btnScanImgFace;
+    private ImageView btnScanImgFrame;
     private Button buttonScan;
     private RelativeLayout layoutScan;
     private CameraView camera;
     private ImageView imageViewScanLine;
+
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -40,6 +47,8 @@ public class CameraCaptureDialog extends DialogFragment {
         setStyle(DialogFragment.STYLE_NO_TITLE, R.style.fragment_dialog);
     }
 
+    //消除setOnTouchListener警告
+    @SuppressLint("ClickableViewAccessibility")
     @Nullable
     @Override
     public View onCreateView(@NonNull final LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -47,6 +56,8 @@ public class CameraCaptureDialog extends DialogFragment {
         imageViewScanLine = view.findViewById(R.id.img_scan_line);
         buttonScan = view.findViewById(R.id.btn_scan);
         layoutScan = view.findViewById(R.id.layout_scan);
+        btnScanImgFace = view.findViewById(R.id.img_scan_btn_face);
+        btnScanImgFrame = view.findViewById(R.id.img_scan_btn_frame);
         camera = view.findViewById(R.id.camera_kit_in_dialog);
         camera.setMethod(cameraMethod);
         camera.setCropOutput(cropOutput);
@@ -58,14 +69,27 @@ public class CameraCaptureDialog extends DialogFragment {
         getDialog().setCancelable(false);
         getDialog().setCanceledOnTouchOutside(false);
 
-        buttonScan.setOnClickListener(new View.OnClickListener() {
+        controlFrameAnim(btnScanImgFrame, ACTION_START);
+
+
+
+        btnScanImgFace.setOnTouchListener(new View.OnTouchListener() {
             @Override
-            public void onClick(View v) {
-                startAnim(imageViewScanLine);
+            public boolean onTouch(View v, MotionEvent event) {
+                switch (event.getAction()) {
+                    case MotionEvent.ACTION_DOWN:
+                        controlLineAnim(imageViewScanLine, ACTION_START);
+                        controlFrameAnim(btnScanImgFrame, ACTION_END);
+                        break;
+                    case MotionEvent.ACTION_UP:
+                        controlFrameAnim(btnScanImgFrame, ACTION_START);
+                        controlLineAnim(imageViewScanLine, ACTION_END);
+                        break;
+                }
+                //返回值含义暂时不理解
+                return true;
             }
         });
-
-
         return view;
     }
 
@@ -83,16 +107,42 @@ public class CameraCaptureDialog extends DialogFragment {
 
 
     /**
-     * 扫描线动画
+     * 扫描线动画控制
      * @param view
      */
-    private void startAnim(View view) {
+    private void controlLineAnim(View view, int acton) {
         Animation animationLineTranslate = new TranslateAnimation(
                 0, 0, 0, layoutScan.getHeight()*0.64f );
         animationLineTranslate.setRepeatMode(Animation.REVERSE);
         animationLineTranslate.setRepeatCount(10000);
         animationLineTranslate.setDuration(1000);
-        view.startAnimation(animationLineTranslate);
+        if (acton == ACTION_START) {
+            view.setVisibility(View.VISIBLE);
+            view.startAnimation(animationLineTranslate);
+        } else if (acton == ACTION_END) {
+            view.clearAnimation();
+            view.setVisibility(View.INVISIBLE);
+        }
     }
+
+    /**
+     * 扫描button框默认动画
+     * @param view
+     * @param action
+     */
+    private void controlFrameAnim(View view, int action) {
+        Animation animationFrameScale = new ScaleAnimation(
+                1.0f, 1.2f, 1.0f, 1.2f,
+                Animation.RELATIVE_TO_SELF, 0.5f, Animation.RELATIVE_TO_SELF, 0.5f);
+        animationFrameScale.setRepeatCount(10000);
+        animationFrameScale.setRepeatMode(Animation.REVERSE);
+        animationFrameScale.setDuration(300);
+        if (action == ACTION_START) {
+            view.startAnimation(animationFrameScale);
+        } else if (action == ACTION_END) {
+            view.clearAnimation();
+        }
+    }
+
 
 }
