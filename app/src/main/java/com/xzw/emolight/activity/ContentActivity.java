@@ -2,6 +2,7 @@ package com.xzw.emolight.activity;
 
 import android.app.Dialog;
 import android.content.Intent;
+import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.net.Uri;
 import android.os.Build;
@@ -30,7 +31,7 @@ import java.io.File;
 import java.io.IOException;
 
 
-public class ContentActivity extends AppCompatActivity {
+public class ContentActivity extends AppCompatActivity{
 
     //是否使用特殊的标题栏背景颜色，android5.0以上可以设置状态栏背景色，如果不使用则使用透明色值
     protected boolean useStatusBarColor = true;
@@ -42,6 +43,7 @@ public class ContentActivity extends AppCompatActivity {
     private TextView textViewReturnMsg;
     private TitleBar titleBar;
     private int dialogImageResId = R.drawable.loading;
+    private Bitmap bitmapReceived;
 //    private byte[] imageByte;
     /*
     private CardViewOne cardViewOne;
@@ -80,6 +82,7 @@ public class ContentActivity extends AppCompatActivity {
             public void onButtonOneClick() {
                 Toast.makeText(ContentActivity.this, "button1_clicked", Toast.LENGTH_SHORT).show();
                 Log.d("debug", "button1 clicked");
+                Bitmap bitmapTest = bitmapReceived;
             }
 
             @Override
@@ -93,10 +96,21 @@ public class ContentActivity extends AppCompatActivity {
                 FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
                 //设置dialogFragment进场动画
                 fragmentTransaction.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN);
+                cameraCaptureDialog.setOnCaptureDialogFragmentListener(new CameraCaptureDialog.OnCaptureDialogFragmentListener() {
+                    @Override
+                    public void onHandleBitmap(Bitmap bitmapTmp) {
+                        Log.d("debug", "received");
+                        bitmapReceived = bitmapTmp;
+
+                    }
+                });
                 cameraCaptureDialog.show(fragmentTransaction, "cameraCapDialog");
+
             }
 
         });
+
+
     }
 
 
@@ -139,7 +153,6 @@ public class ContentActivity extends AppCompatActivity {
     });
 
     /**
-     * 7212519
      * 沉浸状态栏及相关样式设置
      */
     protected void setUseStatusBarColor() {
@@ -183,6 +196,7 @@ public class ContentActivity extends AppCompatActivity {
         }
         imageUri = FileProvider.getUriForFile(getBaseContext(), "com.chc.photo.fileProvider", outputImage);
     }
+
 
     class MyClickListener implements View.OnClickListener {
         @Override

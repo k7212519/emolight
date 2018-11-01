@@ -4,6 +4,7 @@ import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Context;
 import android.content.res.Resources;
+import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.os.Vibrator;
 import android.support.annotation.NonNull;
@@ -22,6 +23,8 @@ import android.widget.ImageView;
 import android.widget.RelativeLayout;
 
 import com.wonderkiln.camerakit.CameraKit;
+import com.wonderkiln.camerakit.CameraKitEventCallback;
+import com.wonderkiln.camerakit.CameraKitImage;
 import com.wonderkiln.camerakit.CameraView;
 import com.xzw.emolight.R;
 
@@ -41,6 +44,20 @@ public class CameraCaptureDialog extends DialogFragment {
     private CameraView camera;
     private ImageView imageViewScanLine;
 
+    private String stringTest = "received";
+    private Bitmap bitmap;
+    private byte[] imageBytes;
+    public OnCaptureDialogFragmentListener onCaptureDialogFragmentListener;
+
+
+
+    public interface OnCaptureDialogFragmentListener{
+        void onHandleBitmap(Bitmap bitmapTmp);
+    }
+
+    public void setOnCaptureDialogFragmentListener(OnCaptureDialogFragmentListener onCaptureDialogFragmentListener) {
+        this.onCaptureDialogFragmentListener = onCaptureDialogFragmentListener;
+    }
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -73,7 +90,6 @@ public class CameraCaptureDialog extends DialogFragment {
         controlFrameAnim(btnScanImgFrame, ACTION_START);
 
 
-
         btnScanImgFace.setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(View v, MotionEvent event) {
@@ -81,8 +97,24 @@ public class CameraCaptureDialog extends DialogFragment {
                     case MotionEvent.ACTION_DOWN:
                         controlLineAnim(imageViewScanLine, ACTION_START);
                         controlFrameAnim(btnScanImgFrame, ACTION_END);
-                        Vibrator vibrator = (Vibrator)getContext().getSystemService(getContext().VIBRATOR_SERVICE);
+
+                        //震动11ms
+                        Vibrator vibrator = (Vibrator) getContext().getSystemService(getContext().VIBRATOR_SERVICE);
                         vibrator.vibrate(11);
+
+
+                        camera.captureImage(new CameraKitEventCallback<CameraKitImage>() {
+                            @Override
+                            public void callback(CameraKitImage cameraKitImage) {
+                                //返回CameraKitImage类型文件，使用imageCaptured()方法转bitmap
+                                bitmap = cameraKitImage.getBitmap();
+                                //onCaptureDialogFragmentListener.onHandleBitmap(bitmap);
+                                onCaptureDialogFragmentListener.onHandleBitmap(bitmap);
+                            }
+                        });
+
+
+
                         break;
                     case MotionEvent.ACTION_UP:
                         controlFrameAnim(btnScanImgFrame, ACTION_START);
@@ -111,11 +143,12 @@ public class CameraCaptureDialog extends DialogFragment {
 
     /**
      * 扫描线动画控制
+     *
      * @param view
      */
     private void controlLineAnim(View view, int acton) {
         Animation animationLineTranslate = new TranslateAnimation(
-                0, 0, 0, layoutScan.getHeight()*0.64f );
+                0, 0, 0, layoutScan.getHeight() * 0.64f);
         animationLineTranslate.setRepeatMode(Animation.REVERSE);
         animationLineTranslate.setRepeatCount(10000);
         animationLineTranslate.setDuration(1000);
@@ -130,6 +163,7 @@ public class CameraCaptureDialog extends DialogFragment {
 
     /**
      * 扫描button框默认动画
+     *
      * @param view
      * @param action
      */
