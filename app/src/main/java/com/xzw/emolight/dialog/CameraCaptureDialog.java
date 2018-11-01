@@ -47,17 +47,9 @@ public class CameraCaptureDialog extends DialogFragment {
     private String stringTest = "received";
     private Bitmap bitmap;
     private byte[] imageBytes;
+    //接口类，用来传递bitmap到activity
     public OnCaptureDialogFragmentListener onCaptureDialogFragmentListener;
 
-
-
-    public interface OnCaptureDialogFragmentListener{
-        void onHandleBitmap(Bitmap bitmapTmp);
-    }
-
-    public void setOnCaptureDialogFragmentListener(OnCaptureDialogFragmentListener onCaptureDialogFragmentListener) {
-        this.onCaptureDialogFragmentListener = onCaptureDialogFragmentListener;
-    }
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -102,16 +94,21 @@ public class CameraCaptureDialog extends DialogFragment {
                         Vibrator vibrator = (Vibrator) getContext().getSystemService(getContext().VIBRATOR_SERVICE);
                         vibrator.vibrate(11);
 
-
+                        //从camera获取bitmap用接口回调给activity
                         camera.captureImage(new CameraKitEventCallback<CameraKitImage>() {
                             @Override
                             public void callback(CameraKitImage cameraKitImage) {
                                 //返回CameraKitImage类型文件，使用imageCaptured()方法转bitmap
                                 bitmap = cameraKitImage.getBitmap();
-                                //onCaptureDialogFragmentListener.onHandleBitmap(bitmap);
+
+                                //获取byte[]类型数据
+//                                imageBytes = cameraKitImage.getJpeg();
+                                //传递bitmap
                                 onCaptureDialogFragmentListener.onHandleBitmap(bitmap);
+
                             }
                         });
+
 
 
 
@@ -180,6 +177,19 @@ public class CameraCaptureDialog extends DialogFragment {
             view.clearAnimation();
         }
     }
+
+    /**
+     * bitmap的传递接口，activity实现接口，重写onHandleBitmap
+     */
+    public interface OnCaptureDialogFragmentListener{
+        void onHandleBitmap(Bitmap bitmapTmp);
+    }
+
+
+    public void setOnCaptureDialogFragmentListener(OnCaptureDialogFragmentListener onCaptureDialogFragmentListener) {
+        this.onCaptureDialogFragmentListener = onCaptureDialogFragmentListener;
+    }
+
 
 
 }

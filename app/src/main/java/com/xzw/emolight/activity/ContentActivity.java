@@ -44,6 +44,7 @@ public class ContentActivity extends AppCompatActivity{
     private TitleBar titleBar;
     private int dialogImageResId = R.drawable.loading;
     private Bitmap bitmapReceived;
+    private EmoHandler emoHandler;
 //    private byte[] imageByte;
     /*
     private CardViewOne cardViewOne;
@@ -61,7 +62,7 @@ public class ContentActivity extends AppCompatActivity{
     }
 
     private void initData() {
-
+        emoHandler=new EmoHandler(ContentActivity.this, handler);
     }
 
     /**
@@ -82,7 +83,6 @@ public class ContentActivity extends AppCompatActivity{
             public void onButtonOneClick() {
                 Toast.makeText(ContentActivity.this, "button1_clicked", Toast.LENGTH_SHORT).show();
                 Log.d("debug", "button1 clicked");
-                Bitmap bitmapTest = bitmapReceived;
             }
 
             @Override
@@ -101,6 +101,13 @@ public class ContentActivity extends AppCompatActivity{
                     public void onHandleBitmap(Bitmap bitmapTmp) {
                         Log.d("debug", "received");
                         bitmapReceived = bitmapTmp;
+                        if (bitmapReceived != null) {
+                            emoHandler.bitmapToFile(bitmapReceived,"/sdcard/emolpic/Fragment.jpg");
+                            emoHandler.detectFaceEmotion("/sdcard/emolpic/Fragment.jpg");
+                        }
+                        //cameraCaptureDialog.dismiss();
+                        //emoHandler.detectFaceEmotion("fragmentCapture");
+
 
                     }
                 });
@@ -132,6 +139,7 @@ public class ContentActivity extends AppCompatActivity{
             switch (message.what) {
                 case 1:
                     String emo = message.getData().getString("returnMsg");
+                    cameraCaptureDialog.dismiss();
                     myDialog.cancel();
                     textViewReturnMsg.setText(emo);
                     Log.d("debug",emo);
@@ -178,11 +186,11 @@ public class ContentActivity extends AppCompatActivity{
     }
 
     /**
-     * 文件处理
+     * 文件处理，拍照存储到本地目录
      */
-    public void fileHandler() {
+    public void fileHandler(String lastName) {
         File dir = new File(Environment.getExternalStorageDirectory() + "/emolpic");
-        File outputImage = new File(Environment.getExternalStorageDirectory()+"/emolpic","tempImage"+".jpg");
+        File outputImage = new File(Environment.getExternalStorageDirectory()+"/emolpic",lastName+".jpg");
         try {
             if (!dir.exists()) {
                 dir.mkdirs();
@@ -203,7 +211,7 @@ public class ContentActivity extends AppCompatActivity{
         public void onClick(View v) {
             switch (v.getId()) {
                 case R.id.btn_capture:
-                    fileHandler();
+                    fileHandler("capture");
                     //新建image文件
                     Intent intentCapture = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
                     //将activity返回的文件存入imageUri
@@ -213,8 +221,7 @@ public class ContentActivity extends AppCompatActivity{
                     break;
                 case R.id.btn_change_color:
                     //FaceInfo faceInfo = new FaceInfo();
-                    EmoHandler emoHandler=new EmoHandler(ContentActivity.this, handler);
-                    emoHandler.detectFaceEmotion();
+                    emoHandler.detectFaceEmotion("capture");
                     //Log.d("debug", emo);
                     showDialog();
                     break;
@@ -223,27 +230,5 @@ public class ContentActivity extends AppCompatActivity{
             }
         }
     }
-
-    /**
-     * 时间处理类
-     */
-    /*class TimeHandler extends Handler {
-        @Override
-        public void handleMessage(Message msg) {
-            switch (msg.what){
-                case 1:
-                    if (progress < 1000){
-                        progress += 20;
-                        myDialog.setProgress(progress);
-                        myDialog.setMessage(MESSAGES[progress / 20 % 4]);
-
-                    }else {
-                        progress = 0;
-                    }
-                    sendEmptyMessageDelayed(1,500);
-                    break;
-            }
-        }
-    }*/
 
 }

@@ -16,8 +16,12 @@ import com.xzw.emolight.R;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.BufferedOutputStream;
 import java.io.ByteArrayOutputStream;
+import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.IOException;
 
 public class EmoHandler {
 
@@ -38,7 +42,7 @@ public class EmoHandler {
     }
 
 
-    public void detectFaceEmotion() {
+    public void detectFaceEmotion(final String path) {
         new Thread(new Runnable() {
             @Override
             public void run() {
@@ -46,10 +50,10 @@ public class EmoHandler {
                 //imageByte = resToBitmap(R.drawable.c032);
                 try {
                     //从sdcard读取保存的文件
-                    fileInputStream = new FileInputStream("/sdcard/emolpic/tempImage.jpg");
+                    fileInputStream = new FileInputStream(path);
                     Bitmap bitmap  = BitmapFactory.decodeStream(fileInputStream);
                     Matrix matrix = new Matrix();
-                    matrix.setRotate(90);
+                    matrix.setRotate(180);
                     Bitmap bitmapRotate = Bitmap.createBitmap(bitmap, 0, 0, bitmap.getWidth(),
                             bitmap.getHeight(), matrix, false);
 //                    bitmap.recycle();
@@ -70,6 +74,7 @@ public class EmoHandler {
                     bundle.putString("returnMsg",returnMsg);
                     message.setData(bundle);
                     handler.sendMessage(message);
+
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
@@ -100,12 +105,25 @@ public class EmoHandler {
      * @param res
      * @return
      */
-    private byte[] resToBitmap(int res){
+    public byte[] resToBitmap(int res){
         Bitmap bitmap = BitmapFactory.decodeResource(context.getResources(), res);
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
         bitmap.compress(Bitmap.CompressFormat.PNG, 100, baos);
         return baos.toByteArray();
     }
+
+    public void bitmapToFile(Bitmap bitmap, String path) {
+        File file = new File(path);
+        try {
+            BufferedOutputStream bos = new BufferedOutputStream(new FileOutputStream(file));
+            bitmap.compress(Bitmap.CompressFormat.JPEG, 100, bos);
+            bos.flush();
+            bos.close();
+        }catch (IOException e){
+            e.printStackTrace();
+        }
+    }
+
 
     /**
      * bitmap转byte[]
@@ -114,7 +132,7 @@ public class EmoHandler {
      */
     public byte[] bitmapToBytes(Bitmap bitmapTemp){
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
-        bitmapTemp.compress(Bitmap.CompressFormat.JPEG, 20,baos);
+        bitmapTemp.compress(Bitmap.CompressFormat.JPEG, 80,baos);
         return baos.toByteArray();
     }
 
