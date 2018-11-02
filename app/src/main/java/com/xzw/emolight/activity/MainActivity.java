@@ -133,7 +133,7 @@ public class MainActivity extends AppCompatActivity{
                 sBuffer.append(" ") ;
             }
         }
-        //putStringToTxt(sBuffer.toString(), "pixel");
+        putStringToTxt(sBuffer.toString(), "pixel");
         return floatValues;
     }
 

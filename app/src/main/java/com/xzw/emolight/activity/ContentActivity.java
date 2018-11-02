@@ -25,6 +25,7 @@ import com.xzw.emolight.dialog.CameraCaptureDialog;
 import com.xzw.emolight.dialog.MyDialog;
 import com.xzw.emolight.R;
 import com.xzw.emolight.util.EmoHandler;
+import com.xzw.emolight.util.EmotionClassifier;
 
 import java.io.File;
 import java.io.IOException;
@@ -46,6 +47,7 @@ public class ContentActivity extends AppCompatActivity{
     private int dialogImageResId = R.drawable.loading;
     private Bitmap bitmapReceived;
     private EmoHandler emoHandler;
+    private EmotionClassifier emotionClassifier;
     /*
     private CardViewOne cardViewOne;
     private CardViewTwo cardViewTwo;
@@ -93,7 +95,7 @@ public class ContentActivity extends AppCompatActivity{
             }
 
             public void onButtonThreeClick() {
-
+                getImgBySys("imgBySys.jpg");
             }
         });
     }
@@ -115,9 +117,13 @@ public class ContentActivity extends AppCompatActivity{
                     //TODO 调用系统相机会闪退，需要判断cameraCapture状态
                     cameraCaptureDialog.dismiss();
 
-                    myDialog.cancel();
+                    //myDialog.cancel();
                     textViewReturnMsg.setText(emo);
                     Log.d("debug",emo);
+
+                    //解析emo数据
+                    emotionClassifier = new EmotionClassifier(emo);
+                    emotionClassifier.getEmoResult();
                     break;
                 case 2:
                     /*if (TitleFragment.loadingImageSelect == 0) {

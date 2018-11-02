@@ -13,10 +13,12 @@ import android.os.Message;
 import android.provider.MediaStore;
 import android.util.Log;
 
+import com.google.gson.Gson;
 import com.megvii.cloud.http.CommonOperate;
 import com.megvii.cloud.http.Response;
 import com.xzw.emolight.R;
 import com.xzw.emolight.activity.ContentActivity;
+import com.xzw.emolight.others.FaceInfo;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -138,6 +140,7 @@ public class EmoHandler {
         message.setData(bundle);
         handler.sendMessage(message);
     }
+
 
     /**
      private String getFaceEmotion(String attriButeStr) throws JSONException {
