@@ -26,6 +26,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.app.progresviews.ProgressWheel;
+import com.github.ybq.android.spinkit.SpinKitView;
 import com.xzw.emolight.adapter.TitleBar;
 import com.xzw.emolight.dialog.CameraCaptureDialog;
 import com.xzw.emolight.dialog.MyDialog;
@@ -60,8 +61,10 @@ public class ContentActivity extends AppCompatActivity{
     private Bitmap bitmapReceived;
     private EmoHandler emoHandler;
     private EmotionClassifier emotionClassifier;
-
+    private SpinKitView spinKitView;
     private ImageView imgDisconnect;
+    private WifiControl wifiControl;
+
 
     /*private CardViewOne cardViewOne;
     private CardViewTwo cardViewTwo;
@@ -103,21 +106,26 @@ public class ContentActivity extends AppCompatActivity{
     private void initData() {
         emoHandler=new EmoHandler(ContentActivity.this, handler);
         progressWheel.setPercentage(2);
+        wifiControl = new WifiControl(ContentActivity.this);
     }
 
     /**
      * 初始化布局
      */
     private void initView() {
+        MyClickListener myClickListener = new MyClickListener();
         titleBar = findViewById(R.id.title_bar);
         Button btnChangeColor = findViewById(R.id.btn_change_color);
         Button btnCapture = findViewById(R.id.btn_capture);
         imgDisconnect = findViewById(R.id.img_connect_status);
+        Button btn_search = findViewById(R.id.btn_search);
         textViewReturnMsg = findViewById(R.id.text_return_msg);
-        btnCapture.setOnClickListener(new MyClickListener());
-        btnChangeColor.setOnClickListener(new MyClickListener());
+        btnCapture.setOnClickListener(myClickListener);
+        btnChangeColor.setOnClickListener(myClickListener);
+        btn_search.setOnClickListener(myClickListener);
         myDialog = new MyDialog(this, dialogImageResId);
         progressWheel = findViewById(R.id.wheel_progress);
+        spinKitView = findViewById(R.id.spin_kit);
         /*cardViewOne = new CardViewOne(ContentActivity.this);
         cardViewTwo = new CardViewTwo(ContentActivity.this);
         cardViewThree = new CardViewThree(ContentActivity.this);*/
@@ -277,6 +285,14 @@ public class ContentActivity extends AppCompatActivity{
                     //Log.d("debug", emo);
                     myDialog.show();
                     break;
+                case R.id.btn_search:
+                    if (!wifiControl.isWifiConnected()) {
+                        wifiControl.OpenWifi();
+                    } else {
+                        //TODO 搜索wifi
+                        imgDisconnect.setVisibility(View.INVISIBLE);
+                        spinKitView.setVisibility(View.VISIBLE);
+                    }
                 default:
                     break;
             }

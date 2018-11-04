@@ -18,4 +18,6 @@
     <color name="colorPrimaryReallyDark">#131B1F</color>
 
     <color name="colorScanText">#6085ff</color>
+
+    <color name="point_color">#4e4e4e</color>
 </resources>

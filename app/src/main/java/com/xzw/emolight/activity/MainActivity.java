@@ -42,6 +42,7 @@ import java.io.InputStream;
 import java.io.OutputStreamWriter;
 import java.util.*;
 
+
 public class MainActivity extends AppCompatActivity{
     static {
         if(!OpenCVLoader.initDebug())
@@ -60,6 +61,7 @@ public class MainActivity extends AppCompatActivity{
     public static final int TAKE_PHOTO = 1;
     private CascadeClassifier cascadeClassifier = null; //级联分类器
     private int absoluteFaceSize = 0;
+
 
     public static Bitmap toGrayscale(Bitmap bmpOriginal) {
         int width, height;
@@ -310,5 +312,7 @@ public class MainActivity extends AppCompatActivity{
         getPhotoButton.setOnClickListener(new MyClickListener());
         greyPhotoButton.setOnClickListener(new MyClickListener());
         gotoContentButton.setOnClickListener(new MyClickListener());
+
+
     }
 }
