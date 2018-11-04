@@ -67,7 +67,7 @@ public class ContentActivity extends AppCompatActivity{
 
     private void initData() {
         emoHandler=new EmoHandler(ContentActivity.this, handler);
-        progressWheel.setPercentage(5);
+        progressWheel.setPercentage(2);
     }
 
     /**
@@ -202,7 +202,9 @@ public class ContentActivity extends AppCompatActivity{
     }
 
     private void setProgressWheelByEmo(double emoValue, String emoType) {
-        if (emoValue > 90) {
+        if (emoValue > 99) {
+            progressWheel.setPercentage(360);
+        }else if (emoValue > 90) {
             progressWheel.setPercentage(340);
         } else if (emoValue <= 90) {
             progressWheel.setPercentage(340/90 * (int)emoValue);
