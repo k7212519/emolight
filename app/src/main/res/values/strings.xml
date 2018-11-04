@@ -20,4 +20,7 @@
     <string name="reliability">可信度：0%</string>
     <string name="not_detect">未检测</string>
     <string name="reliability_text">可信度：</string>
+
+    <string name="research">重新搜索设备</string>
+    <string name="search">搜索</string>
 </resources>

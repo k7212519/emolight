@@ -23,9 +23,9 @@
         android:orientation="vertical"
         android:background="@color/colorBackground">
 
-        <include layout="@layout/card_view_1"></include>
+        <include layout="@layout/card_view_1"/>
 
-        <include layout="@layout/card_view_2"></include>
+        <include layout="@layout/card_view_2"/>
 
         <include layout="@layout/card_view_3" />
 

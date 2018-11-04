@@ -1,9 +1,13 @@
 package com.xzw.emolight.activity;
 
+import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.Color;
+import android.media.Image;
+import android.net.ConnectivityManager;
 import android.net.Uri;
+import android.net.wifi.WifiManager;
 import android.os.Build;
 import android.os.Environment;
 import android.os.Handler;
@@ -17,6 +21,7 @@ import android.util.Log;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -25,6 +30,10 @@ import com.xzw.emolight.adapter.TitleBar;
 import com.xzw.emolight.dialog.CameraCaptureDialog;
 import com.xzw.emolight.dialog.MyDialog;
 import com.xzw.emolight.R;
+import com.xzw.emolight.item.CardViewOne;
+import com.xzw.emolight.item.CardViewThree;
+import com.xzw.emolight.item.CardViewTwo;
+import com.xzw.emolight.others.WifiControl;
 import com.xzw.emolight.service.WifiService;
 import com.xzw.emolight.util.EmoHandler;
 import com.xzw.emolight.util.EmotionClassifier;
@@ -51,11 +60,12 @@ public class ContentActivity extends AppCompatActivity{
     private Bitmap bitmapReceived;
     private EmoHandler emoHandler;
     private EmotionClassifier emotionClassifier;
-    /*
-    private CardViewOne cardViewOne;
+
+    private ImageView imgDisconnect;
+
+    /*private CardViewOne cardViewOne;
     private CardViewTwo cardViewTwo;
-    private CardViewThree cardViewThree;
-    */
+    private CardViewThree cardViewThree;*/
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -67,6 +77,25 @@ public class ContentActivity extends AppCompatActivity{
 
         //TODO 测试是否影响app启动速度
         startService(new Intent(this, WifiService.class));
+
+        //title中三个按钮的事件
+        titleBar.setOnTitleClickListener(new TitleBar.TitleOnClickListener() {
+            @Override
+            public void onButtonOneClick() {
+                Toast.makeText(ContentActivity.this, "button1_clicked", Toast.LENGTH_SHORT).show();
+                Log.d("debug", "button1 clicked");
+                progressWheel.setPercentage(350);
+            }
+
+            @Override
+            public void onButtonTwoClick() {
+                startActivity(new Intent(ContentActivity.this, CameraKitActivity.class));
+                Toast.makeText(ContentActivity.this, "button2_clicked", Toast.LENGTH_SHORT).show();
+            }
+            public void onButtonThreeClick() {
+//                getImgBySys("imgBySys.jpg");
+            }
+        });
     }
 
 
@@ -83,32 +112,18 @@ public class ContentActivity extends AppCompatActivity{
         titleBar = findViewById(R.id.title_bar);
         Button btnChangeColor = findViewById(R.id.btn_change_color);
         Button btnCapture = findViewById(R.id.btn_capture);
+        imgDisconnect = findViewById(R.id.img_connect_status);
         textViewReturnMsg = findViewById(R.id.text_return_msg);
         btnCapture.setOnClickListener(new MyClickListener());
         btnChangeColor.setOnClickListener(new MyClickListener());
         myDialog = new MyDialog(this, dialogImageResId);
         progressWheel = findViewById(R.id.wheel_progress);
+        /*cardViewOne = new CardViewOne(ContentActivity.this);
+        cardViewTwo = new CardViewTwo(ContentActivity.this);
+        cardViewThree = new CardViewThree(ContentActivity.this);*/
 
 
-        //title中三个按钮的事件
-        titleBar.setOnTitleClickListener(new TitleBar.TitleOnClickListener() {
-            @Override
-            public void onButtonOneClick() {
-                Toast.makeText(ContentActivity.this, "button1_clicked", Toast.LENGTH_SHORT).show();
-                Log.d("debug", "button1 clicked");
-                progressWheel.setPercentage(350);
-            }
 
-            @Override
-            public void onButtonTwoClick() {
-                startActivity(new Intent(ContentActivity.this, CameraKitActivity.class));
-                Toast.makeText(ContentActivity.this, "button2_clicked", Toast.LENGTH_SHORT).show();
-            }
-
-            public void onButtonThreeClick() {
-                getImgBySys("imgBySys.jpg");
-            }
-        });
     }
 
     /**

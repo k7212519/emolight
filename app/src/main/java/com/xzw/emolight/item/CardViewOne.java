@@ -18,13 +18,7 @@ public class CardViewOne extends CardView {
         super(context);
         //imageView = imageView.findViewById(R.id.image_card_one);
         //imageView.setColorFilter(R.color.colorBackground);
+
     }
 
-    public CardViewOne(@NonNull Context context, @Nullable AttributeSet attrs) {
-        super(context, attrs);
-    }
-
-    public CardViewOne(@NonNull Context context, @Nullable AttributeSet attrs, int defStyleAttr) {
-        super(context, attrs, defStyleAttr);
-    }
 }
