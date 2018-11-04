@@ -16,4 +16,8 @@
     <string name="emotion_disgust">反感</string>
     <string name="emotion_anger">愤怒</string>
     <string name="emotion_null">未知表情</string>
+    
+    <string name="reliability">可信度：0%</string>
+    <string name="not_detect">未检测</string>
+    <string name="reliability_text">可信度：</string>
 </resources>

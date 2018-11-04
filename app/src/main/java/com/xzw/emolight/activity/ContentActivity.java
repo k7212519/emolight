@@ -20,6 +20,7 @@ import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.app.progresviews.ProgressWheel;
 import com.xzw.emolight.adapter.TitleBar;
 import com.xzw.emolight.dialog.CameraCaptureDialog;
 import com.xzw.emolight.dialog.MyDialog;
@@ -44,6 +45,7 @@ public class ContentActivity extends AppCompatActivity{
     private CameraCaptureDialog cameraCaptureDialog;
     private TextView textViewReturnMsg;
     private TitleBar titleBar;
+    private ProgressWheel progressWheel;
     private int dialogImageResId = R.drawable.loading;
     private Bitmap bitmapReceived;
     private EmoHandler emoHandler;
@@ -59,12 +61,13 @@ public class ContentActivity extends AppCompatActivity{
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_content);
         setUseStatusBarColor();     //设置状态栏沉浸
-        initData();
         initView();
+        initData();
     }
 
     private void initData() {
         emoHandler=new EmoHandler(ContentActivity.this, handler);
+        progressWheel.setPercentage(5);
     }
 
     /**
@@ -78,6 +81,7 @@ public class ContentActivity extends AppCompatActivity{
         btnCapture.setOnClickListener(new MyClickListener());
         btnChangeColor.setOnClickListener(new MyClickListener());
         myDialog = new MyDialog(this, dialogImageResId);
+        progressWheel = findViewById(R.id.wheel_progress);
 
 
         //title中三个按钮的事件
@@ -86,6 +90,7 @@ public class ContentActivity extends AppCompatActivity{
             public void onButtonOneClick() {
                 Toast.makeText(ContentActivity.this, "button1_clicked", Toast.LENGTH_SHORT).show();
                 Log.d("debug", "button1 clicked");
+                progressWheel.setPercentage(350);
             }
 
             @Override
@@ -125,6 +130,9 @@ public class ContentActivity extends AppCompatActivity{
                     emotionClassifier = new EmotionClassifier(emo);
                     emotionClassifier.getEmoResult(ContentActivity.this);
                     Log.d("debug", emotionClassifier.getEmoResult(ContentActivity.this));
+                    setProgressWheelByEmo(emotionClassifier.getEmoResultValue(),
+                            emotionClassifier.getEmoResult(ContentActivity.this));
+                    Log.d("debug", String.valueOf(emotionClassifier.getEmoResultValue()));
                     break;
                 case 2:
                     /*if (TitleFragment.loadingImageSelect == 0) {
@@ -191,6 +199,17 @@ public class ContentActivity extends AppCompatActivity{
         Intent intentCapture = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
         intentCapture.putExtra(MediaStore.EXTRA_OUTPUT, imageUri);
         startActivityForResult(intentCapture, 0);
+    }
+
+    private void setProgressWheelByEmo(double emoValue, String emoType) {
+        if (emoValue > 90) {
+            progressWheel.setPercentage(340);
+        } else if (emoValue <= 90) {
+            progressWheel.setPercentage(340/90 * (int)emoValue);
+        }
+
+        progressWheel.setStepCountText(emoType);
+        progressWheel.setDefText(getString(R.string.reliability_text)+String.valueOf((int) emoValue)+"%");
     }
 
 

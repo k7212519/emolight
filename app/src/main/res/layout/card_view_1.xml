@@ -21,7 +21,6 @@
             android:id="@+id/image_card_one"
             android:layout_width="match_parent"
             android:layout_height="0dp"
-            android:background="@color/colorAccent"
             android:layout_weight="7">
 
             <TextView
@@ -32,6 +31,22 @@
                 android:textColor="@color/colorStatusBar"
                 android:layout_marginTop="20dp"
                 android:layout_marginLeft="20dp"/>
+
+            <com.app.progresviews.ProgressWheel
+                android:id="@+id/wheel_progress"
+                android:layout_width="160dp"
+                android:layout_height="160dp"
+                android:layout_centerInParent="true"
+                app:barWidth="15dp"
+                app:marginBtwText= "15dp"
+                app:countText="@string/not_detect"
+                app:definitionText="@string/reliability"
+                app:countTextColor="@android:color/black"
+                app:defTextColor="@color/colorTextGray"
+                app:progressColor="#64b324"
+                app:defTextSize="10sp"
+                app:countTextSize="20sp"
+                app:percentage="340"/>
 
 
         </RelativeLayout>
