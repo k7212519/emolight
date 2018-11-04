@@ -123,7 +123,8 @@ public class ContentActivity extends AppCompatActivity{
 
                     //解析emo数据
                     emotionClassifier = new EmotionClassifier(emo);
-                    emotionClassifier.getEmoResult();
+                    emotionClassifier.getEmoResult(ContentActivity.this);
+                    Log.d("debug", emotionClassifier.getEmoResult(ContentActivity.this));
                     break;
                 case 2:
                     /*if (TitleFragment.loadingImageSelect == 0) {

@@ -7,4 +7,13 @@
     <string name="resolved">解析完成</string>
     <string name="dir_name">emolpic</string>
     <string name="start_scan">按住扫描</string>
+
+    <string name="emotion_happy">开心</string>
+    <string name="emotion_neutral">平静</string>
+    <string name="emotion_surprise">惊讶</string>
+    <string name="emotion_sadness">低落</string>
+    <string name="emotion_fear">害怕</string>
+    <string name="emotion_disgust">反感</string>
+    <string name="emotion_anger">愤怒</string>
+    <string name="emotion_null">未知表情</string>
 </resources>
