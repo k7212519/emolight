@@ -25,6 +25,7 @@ import com.xzw.emolight.adapter.TitleBar;
 import com.xzw.emolight.dialog.CameraCaptureDialog;
 import com.xzw.emolight.dialog.MyDialog;
 import com.xzw.emolight.R;
+import com.xzw.emolight.service.WifiService;
 import com.xzw.emolight.util.EmoHandler;
 import com.xzw.emolight.util.EmotionClassifier;
 
@@ -63,7 +64,12 @@ public class ContentActivity extends AppCompatActivity{
         setUseStatusBarColor();     //设置状态栏沉浸
         initView();
         initData();
+
+        //TODO 测试是否影响app启动速度
+        startService(new Intent(this, WifiService.class));
     }
+
+
 
     private void initData() {
         emoHandler=new EmoHandler(ContentActivity.this, handler);
@@ -214,6 +220,9 @@ public class ContentActivity extends AppCompatActivity{
         progressWheel.setDefText(getString(R.string.reliability_text)+String.valueOf((int) emoValue)+"%");
     }
 
+    private void startWifiService() {
+
+    }
 
     /**
      * cardview1 按键响应
@@ -258,6 +267,5 @@ public class ContentActivity extends AppCompatActivity{
             }
         }
     }
-
 
 }
