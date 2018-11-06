@@ -25,9 +25,11 @@
 
         <include layout="@layout/card_view_1"/>
 
+        <include layout="@layout/card_view_3" />
+
         <include layout="@layout/card_view_2"/>
 
-        <include layout="@layout/card_view_3" />
+
 
 
     </LinearLayout>
