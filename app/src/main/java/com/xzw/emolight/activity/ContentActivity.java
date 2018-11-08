@@ -13,6 +13,7 @@ import android.os.Environment;
 import android.os.Handler;
 import android.os.Message;
 import android.provider.MediaStore;
+import android.support.annotation.ColorInt;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.content.FileProvider;
 import android.support.v7.app.AppCompatActivity;
@@ -27,6 +28,8 @@ import android.widget.Toast;
 
 import com.app.progresviews.ProgressWheel;
 import com.github.ybq.android.spinkit.SpinKitView;
+import com.jrummyapps.android.colorpicker.ColorPickerDialog;
+import com.jrummyapps.android.colorpicker.ColorPickerDialogListener;
 import com.xzw.emolight.adapter.TitleBar;
 import com.xzw.emolight.dialog.CameraCaptureDialog;
 import com.xzw.emolight.dialog.MyDialog;
@@ -51,19 +54,33 @@ public class ContentActivity extends AppCompatActivity{
     protected boolean useStatusBarColor = true;
     //是否使用状态栏文字和图标为暗色，如果状态栏采用了白色系，则需要使状态栏和图标为暗色，android6.0以上可以设置
     protected boolean useThemeStatusBarColor = false;
+    //系统相机返回图片地址
     private Uri imageUri;
+    //gif等待动画
     private MyDialog myDialog;
+    //图像获取Dialog
     private CameraCaptureDialog cameraCaptureDialog;
     private TextView textViewReturnMsg;
+    //自定义标题栏
     private TitleBar titleBar;
+    //连接设备等待动画
     private ProgressWheel progressWheel;
     private int dialogImageResId = R.drawable.loading;
     private Bitmap bitmapReceived;
+    //自定义的情绪处理类
     private EmoHandler emoHandler;
+    //自定义的清晰分类器
     private EmotionClassifier emotionClassifier;
+    //情绪百分比圆盘控件
     private SpinKitView spinKitView;
+    //选色dialog
+//    private ColorPickerDialog colorPickerDialog;
+    //连接状态图片
     private ImageView imgDisconnect;
+    private ImageView imgControl;
+    //自定义的wifi控制类
     private WifiControl wifiControl;
+    private Button btnControlColor;
 
 
     /*private CardViewOne cardViewOne;
@@ -97,8 +114,11 @@ public class ContentActivity extends AppCompatActivity{
             }
             public void onButtonThreeClick() {
 //                getImgBySys("imgBySys.jpg");
+
             }
         });
+
+
     }
 
 
@@ -117,6 +137,7 @@ public class ContentActivity extends AppCompatActivity{
         titleBar = findViewById(R.id.title_bar);
         Button btnChangeColor = findViewById(R.id.btn_change_color);
         Button btnCapture = findViewById(R.id.btn_capture);
+        btnControlColor = findViewById(R.id.btn_control_color);
         imgDisconnect = findViewById(R.id.img_connect_status);
         Button btn_search = findViewById(R.id.btn_search);
         textViewReturnMsg = findViewById(R.id.text_return_msg);
@@ -126,6 +147,17 @@ public class ContentActivity extends AppCompatActivity{
         myDialog = new MyDialog(this, dialogImageResId);
         progressWheel = findViewById(R.id.wheel_progress);
         spinKitView = findViewById(R.id.spin_kit);
+        imgControl = findViewById(R.id.img_color_control);
+        imgControl.setOnClickListener(myClickListener);
+        btnControlColor.setOnClickListener(myClickListener);
+        /*colorPickerDialog = ColorPickerDialog.newBuilder()
+                .setColor(getColor(R.color.colorStatusBar))
+                .setDialogTitle(R.string.app_name)
+                .setDialogTitle(ColorPickerDialog.TYPE_CUSTOM)
+                .setShowAlphaSlider(true)
+                .setDialogId(0)
+                .setAllowPresets(false)
+                .create();*/
         /*cardViewOne = new CardViewOne(ContentActivity.this);
         cardViewTwo = new CardViewTwo(ContentActivity.this);
         cardViewThree = new CardViewThree(ContentActivity.this);*/
@@ -247,6 +279,41 @@ public class ContentActivity extends AppCompatActivity{
 
     }
 
+    private void openColorPickerDialog() {
+//传入的默认color
+        ColorPickerDialog colorPickerDialog = ColorPickerDialog.newBuilder().setColor(R.color.colorAccent)
+                .setDialogTitle(R.string.app_name)
+//设置dialog标题
+                .setDialogType(ColorPickerDialog.TYPE_CUSTOM)
+//设置为自定义模式
+                .setShowAlphaSlider(false)
+//设置有透明度模式，默认没有透明度
+                .setDialogId(0)
+//设置Id,回调时传回用于判断
+                .setAllowPresets(false)
+//不显示预知模式
+                .create();
+//Buider创建
+        colorPickerDialog.setColorPickerDialogListener(pickerDialogListener);
+//设置回调，用于获取选择的颜色
+        colorPickerDialog.show(this.getFragmentManager(), "color-picker-dialog");
+    }
+
+    private ColorPickerDialogListener pickerDialogListener = new ColorPickerDialogListener() {
+        @Override
+        public void onColorSelected(int dialogId, @ColorInt int color) {
+            if (dialogId == 0) {
+                //colorPickerViewModel.setColor(color);
+            }
+        }
+
+        @Override
+        public void onDialogDismissed(int dialogId) {
+
+        }
+    };
+
+
     /**
      * cardview1 按键响应
      */
@@ -293,6 +360,12 @@ public class ContentActivity extends AppCompatActivity{
                         imgDisconnect.setVisibility(View.INVISIBLE);
                         spinKitView.setVisibility(View.VISIBLE);
                     }
+                case R.id.img_color_control:
+                    openColorPickerDialog();
+                    break;
+                case R.id.btn_control_color:
+                    openColorPickerDialog();
+                    break;
                 default:
                     break;
             }
