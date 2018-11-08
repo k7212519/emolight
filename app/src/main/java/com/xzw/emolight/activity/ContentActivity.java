@@ -360,6 +360,7 @@ public class ContentActivity extends AppCompatActivity{
                         imgDisconnect.setVisibility(View.INVISIBLE);
                         spinKitView.setVisibility(View.VISIBLE);
                     }
+                    break;
                 case R.id.img_color_control:
                     openColorPickerDialog();
                     break;
