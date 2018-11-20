@@ -1,13 +1,12 @@
 package com.xzw.emolight.activity;
 
+import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.graphics.Bitmap;
 import android.graphics.Color;
-import android.media.Image;
-import android.net.ConnectivityManager;
 import android.net.Uri;
-import android.net.wifi.WifiManager;
 import android.os.Build;
 import android.os.Environment;
 import android.os.Handler;
@@ -34,9 +33,6 @@ import com.xzw.emolight.adapter.TitleBar;
 import com.xzw.emolight.dialog.CameraCaptureDialog;
 import com.xzw.emolight.dialog.MyDialog;
 import com.xzw.emolight.R;
-import com.xzw.emolight.item.CardViewOne;
-import com.xzw.emolight.item.CardViewThree;
-import com.xzw.emolight.item.CardViewTwo;
 import com.xzw.emolight.others.WifiControl;
 import com.xzw.emolight.service.WifiService;
 import com.xzw.emolight.util.EmoHandler;
@@ -82,6 +78,7 @@ public class ContentActivity extends AppCompatActivity{
     private WifiControl wifiControl;
     private Button btnControlColor;
 
+    private Intent wifiIntent;
 
     /*private CardViewOne cardViewOne;
     private CardViewTwo cardViewTwo;
@@ -94,9 +91,6 @@ public class ContentActivity extends AppCompatActivity{
         setUseStatusBarColor();     //设置状态栏沉浸
         initView();
         initData();
-
-        //TODO 测试是否影响app启动速度
-        startService(new Intent(this, WifiService.class));
 
         //title中三个按钮的事件
         titleBar.setOnTitleClickListener(new TitleBar.TitleOnClickListener() {
@@ -113,21 +107,38 @@ public class ContentActivity extends AppCompatActivity{
                 Toast.makeText(ContentActivity.this, "button2_clicked", Toast.LENGTH_SHORT).show();
             }
             public void onButtonThreeClick() {
-//                getImgBySys("imgBySys.jpg");
-
+//                getImgBySys("imgBySys.jpg")
+                Intent intent = new Intent();
+                intent.setAction("WifiService.Action.SendMsg");
+                intent.putExtra("msg", "000000001000a");
+                sendBroadcast(intent);
             }
         });
 
 
     }
 
-
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        stopService(wifiIntent);
+        Log.d("WifiDebug", "acDestroy");
+    }
 
     private void initData() {
+        //wifiService的intent初始化
+        wifiIntent = new Intent(this, WifiService.class);
+        //表情处理初始化
         emoHandler=new EmoHandler(ContentActivity.this, handler);
+        //表情进度初始化
         progressWheel.setPercentage(2);
+        //wifi开关控制
         wifiControl = new WifiControl(ContentActivity.this);
+        //注册广播
+        registerBroadcast();
     }
+
+
 
     /**
      * 初始化布局
@@ -275,8 +286,9 @@ public class ContentActivity extends AppCompatActivity{
         progressWheel.setDefText(getString(R.string.reliability_text)+String.valueOf((int) emoValue)+"%");
     }
 
+    //开启wifi服务
     private void startWifiService() {
-
+        startService(wifiIntent);
     }
 
     private void openColorPickerDialog() {
@@ -293,7 +305,7 @@ public class ContentActivity extends AppCompatActivity{
                 .setAllowPresets(false)
 //不显示预知模式
                 .create();
-//Buider创建
+//Builder创建
         colorPickerDialog.setColorPickerDialogListener(pickerDialogListener);
 //设置回调，用于获取选择的颜色
         colorPickerDialog.show(this.getFragmentManager(), "color-picker-dialog");
@@ -312,6 +324,16 @@ public class ContentActivity extends AppCompatActivity{
 
         }
     };
+
+    /**
+     * 注册广播
+     */
+    private void registerBroadcast() {
+        BroadcastReceiverInContentActivity broadcastReceiverInContentActivity = new BroadcastReceiverInContentActivity();
+        IntentFilter intentFilter = new IntentFilter();
+        intentFilter.addAction("ContentActivity.Action.ReceivedMsg");
+        registerReceiver(broadcastReceiverInContentActivity, intentFilter);
+    }
 
 
     /**
@@ -357,6 +379,7 @@ public class ContentActivity extends AppCompatActivity{
                         wifiControl.OpenWifi();
                     } else {
                         //TODO 搜索wifi
+                        startWifiService();
                         imgDisconnect.setVisibility(View.INVISIBLE);
                         spinKitView.setVisibility(View.VISIBLE);
                     }
@@ -366,6 +389,22 @@ public class ContentActivity extends AppCompatActivity{
                     break;
                 case R.id.btn_control_color:
                     openColorPickerDialog();
+                    break;
+                default:
+                    break;
+            }
+        }
+    }
+
+    class BroadcastReceiverInContentActivity extends BroadcastReceiver {
+
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            String action = intent.getAction();
+            switch (action) {
+                case "ContentActivity.Action.ReceivedMsg":
+                    break;
+                case "readMsg":
                     break;
                 default:
                     break;

@@ -52,7 +52,7 @@ public class MainActivity extends AppCompatActivity{
     }
 
     private ImageView imageView;
-    private TextView reslutTextView;
+    private TextView resultTextView;
     private Button getPhotoButton, greyPhotoButton, ferButton, gotoContentButton;
     private Classifier classifier;//识别类
     private static final String MODEL_FILE = "file:///android_asset/FacialExpressionReg.pb";
@@ -192,10 +192,10 @@ public class MainActivity extends AppCompatActivity{
         Bitmap destBitmap = Bitmap.createBitmap(bitmap, (int) (facesArray[0].tl().x), (int) (facesArray[0].tl().y), facesArray[0].width, facesArray[0].height);
         Bitmap scaleImage = scaleImage(destBitmap, 48, 48);
         Bitmap bitmap5 = toGrayscale(scaleImage);
-        Bitmap bitmap6 = adjustPhotoRotation(bitmap5, 270);
+//        Bitmap bitmap6 = adjustPhotoRotation(bitmap5, 270);
 
         classifier = new Classifier(getAssets(),MODEL_FILE);
-        ArrayList<String> result = classifier.predict(getSingleChannelPixel(bitmap6));
+        ArrayList<String> result = classifier.predict(getSingleChannelPixel(bitmap5));
         //0=Angry, 1=Disgust, 2=Fear, 3=Happy, 4=Sad, 5=Surprise, 6=Neutral
         String str = result.get(0);
         switch(str){
@@ -216,7 +216,7 @@ public class MainActivity extends AppCompatActivity{
             default:
                 Log.d("ccx","Tensorflow return is error.");;break;
         }
-        reslutTextView.setText("识别结果: " + str);
+        resultTextView.setText("识别结果: " + str);
         return;
     }
 
@@ -307,7 +307,7 @@ public class MainActivity extends AppCompatActivity{
         imageView = (ImageView)findViewById(R.id.img_ccx);
         getPhotoButton = (Button)findViewById(R.id.btn_get_photo);
         greyPhotoButton = (Button)findViewById(R.id.btn_grey_photo);
-        reslutTextView = (TextView)findViewById(R.id.tv_output);
+        resultTextView = (TextView)findViewById(R.id.tv_output);
         initializeOpenCVDependencies();
         getPhotoButton.setOnClickListener(new MyClickListener());
         greyPhotoButton.setOnClickListener(new MyClickListener());
