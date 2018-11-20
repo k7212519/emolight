@@ -108,10 +108,7 @@ public class ContentActivity extends AppCompatActivity{
             }
             public void onButtonThreeClick() {
 //                getImgBySys("imgBySys.jpg")
-                Intent intent = new Intent();
-                intent.setAction("WifiService.Action.SendMsg");
-                intent.putExtra("msg", "000000001000a");
-                sendBroadcast(intent);
+                sendMsgByWifi("000000001000a");
             }
         });
 
@@ -333,6 +330,14 @@ public class ContentActivity extends AppCompatActivity{
         IntentFilter intentFilter = new IntentFilter();
         intentFilter.addAction("ContentActivity.Action.ReceivedMsg");
         registerReceiver(broadcastReceiverInContentActivity, intentFilter);
+    }
+
+    private boolean sendMsgByWifi(String msg) {
+        Intent intent = new Intent();
+        intent.setAction("WifiService.Action.SendMsg");
+        intent.putExtra("msg", msg);
+        sendBroadcast(intent);
+        return true;
     }
 
 

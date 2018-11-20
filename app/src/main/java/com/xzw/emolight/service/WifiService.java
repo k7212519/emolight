@@ -85,17 +85,25 @@ public class WifiService extends Service {
      * 向socket发送消息
      * @param msg
      */
-    public void writeMsg(String msg){
+    public void writeMsg(final String msg) {
         Log.d("WifiDebug", "writeMsg");
-        Log.d("WifiDebug",msg);
-        if(msg.length() == 0 || mOutputStream == null)
-            return;
-        try {   //发送
-            mOutputStream.write(msg.getBytes());
-            mOutputStream.flush();
-        }catch (Exception e) {
-            e.printStackTrace();
-        }
+        Log.d("WifiDebug", msg);
+
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                if (msg.length() == 0 || mOutputStream == null)
+                    return;
+                try {   //发送
+                    mOutputStream.write(msg.getBytes());
+                    mOutputStream.flush();
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+        }).start();
+
+
     }
 
     class BroadcastReceiverInService extends BroadcastReceiver {
@@ -108,7 +116,7 @@ public class WifiService extends Service {
             Log.d("WifiDebug", "receivedBRinService");
             switch (action) {
                 case "WifiService.Action.SendMsg":
-                    writeMsg("100010000000a");
+                    writeMsg(msg);
                     Log.d("WifiDebug", "writeFinish");
                     break;
                 default:
