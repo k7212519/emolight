@@ -108,7 +108,7 @@ public class ContentActivity extends AppCompatActivity{
             }
             public void onButtonThreeClick() {
 //                getImgBySys("imgBySys.jpg")
-                sendMsgByWifi("000000001000a");
+                sendMsgByWifi("110000001000a");
             }
         });
 

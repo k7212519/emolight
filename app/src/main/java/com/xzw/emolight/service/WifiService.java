@@ -75,10 +75,11 @@ public class WifiService extends Service {
                 handlerThread = new Handler(new Handler.Callback(){
                     @Override
                     public boolean handleMessage(Message msg) {
+                        msg.obj.toString();
                         switch (msg.what) {
                             case ACTION_SEND_MSG:
                                 //发送消息
-                                writeMsg("11");
+                                writeMsg(msg.obj.toString());
                                 break;
                             default:
                                 break;
@@ -112,29 +113,25 @@ public class WifiService extends Service {
     /**
      * 向socket发送消息
      * @param msg
+     * 该方法在主线程执行接受不到消息（原因未知）
+     * 放在一个子线程执行可以避免每次发送都需要创建新的线程
      */
     public void writeMsg(final String msg) {
         Log.d("WifiDebug", "writeMsg");
         Log.d("WifiDebug", msg);
-
-        /*new Thread(new Runnable() {
-            @Override
-            public void run() {*/
-                if (msg.length() == 0 || mOutputStream == null)
-                    return;
-                try {   //发送
-                    mOutputStream.write(msg.getBytes());
-                    mOutputStream.flush();
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-        /*    }
-        }).start();
-*/
+        if (msg.length() == 0 || mOutputStream == null)
+            return;
+        try {   //发送
+            mOutputStream.write(msg.getBytes());
+            mOutputStream.flush();
+            } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     public void sendMsg(String msg) {
-        handlerThread.sendEmptyMessage(ACTION_SEND_MSG);
+        //向子线程发送消息
+        handlerThread.obtainMessage(ACTION_SEND_MSG, msg).sendToTarget();
     }
 
     class BroadcastReceiverInService extends BroadcastReceiver {
