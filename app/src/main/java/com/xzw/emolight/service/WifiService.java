@@ -23,6 +23,7 @@ import static com.xzw.emolight.service.WifiService.ACTION_SEND_MSG;
 public class WifiService extends Service {
 
     public final static int ACTION_SEND_MSG = 1;
+    public final static String ACTION_BR_SEND_MSG = "WifiService.Action.SendMsg";
 
     public Handler handlerThread;
     private Socket mSocket;

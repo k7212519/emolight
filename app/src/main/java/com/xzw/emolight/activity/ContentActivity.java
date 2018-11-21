@@ -41,6 +41,8 @@ import com.xzw.emolight.util.EmotionClassifier;
 import java.io.File;
 import java.io.IOException;
 
+import static com.xzw.emolight.service.WifiService.ACTION_BR_SEND_MSG;
+
 
 public class ContentActivity extends AppCompatActivity{
 
@@ -108,7 +110,7 @@ public class ContentActivity extends AppCompatActivity{
             }
             public void onButtonThreeClick() {
 //                getImgBySys("imgBySys.jpg")
-                sendMsgByWifi("110000001000a");
+                sendMsgByWifi("a100010001000");
             }
         });
 
@@ -283,11 +285,6 @@ public class ContentActivity extends AppCompatActivity{
         progressWheel.setDefText(getString(R.string.reliability_text)+String.valueOf((int) emoValue)+"%");
     }
 
-    //开启wifi服务
-    private void startWifiService() {
-        startService(wifiIntent);
-    }
-
     private void openColorPickerDialog() {
 //传入的默认color
         ColorPickerDialog colorPickerDialog = ColorPickerDialog.newBuilder().setColor(R.color.colorAccent)
@@ -322,6 +319,11 @@ public class ContentActivity extends AppCompatActivity{
         }
     };
 
+    //开启wifi服务
+    private void startWifiService() {
+        startService(wifiIntent);
+    }
+
     /**
      * 注册广播
      */
@@ -332,9 +334,14 @@ public class ContentActivity extends AppCompatActivity{
         registerReceiver(broadcastReceiverInContentActivity, intentFilter);
     }
 
+    /**
+     * 向WifiService发送广播——发送msg
+     * @param msg
+     * @return
+     */
     private boolean sendMsgByWifi(String msg) {
         Intent intent = new Intent();
-        intent.setAction("WifiService.Action.SendMsg");
+        intent.setAction(ACTION_BR_SEND_MSG);
         intent.putExtra("msg", msg);
         sendBroadcast(intent);
         return true;
