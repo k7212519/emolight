@@ -5,7 +5,10 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.os.Handler;
 import android.os.IBinder;
+import android.os.Looper;
+import android.os.Message;
 import android.renderscript.ScriptGroup;
 import android.util.Log;
 
@@ -15,14 +18,20 @@ import java.io.OutputStream;
 import java.net.Socket;
 import java.text.BreakIterator;
 
+import static com.xzw.emolight.service.WifiService.ACTION_SEND_MSG;
+
 public class WifiService extends Service {
+
+    public final static int ACTION_SEND_MSG = 1;
+
+    public Handler handlerThread;
     private Socket mSocket;
     private String mIpAddress;
     private int mClientPort;
     private InputStream mInputStream;
     private OutputStream mOutputStream;
     public WifiService() {
-        this.mIpAddress = "192.168.4.1";
+        this.mIpAddress = "192.168.43.249";
         this.mClientPort = 80;
     }
 
@@ -48,6 +57,7 @@ public class WifiService extends Service {
         Thread wifiSocketThread = new Thread(new Runnable() {
             @Override
             public void run() {
+
                 try {
                     mSocket = new Socket(mIpAddress, mClientPort);
                     if(mSocket != null){
@@ -59,6 +69,24 @@ public class WifiService extends Service {
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
+
+                //子线程接收消息
+                Looper.prepare();
+                handlerThread = new Handler(new Handler.Callback(){
+                    @Override
+                    public boolean handleMessage(Message msg) {
+                        switch (msg.what) {
+                            case ACTION_SEND_MSG:
+                                //发送消息
+                                writeMsg("11");
+                                break;
+                            default:
+                                break;
+                        }
+                        return false;
+                    }
+                });
+                Looper.loop();
             }
         });
         wifiSocketThread.start();
@@ -89,9 +117,9 @@ public class WifiService extends Service {
         Log.d("WifiDebug", "writeMsg");
         Log.d("WifiDebug", msg);
 
-        new Thread(new Runnable() {
+        /*new Thread(new Runnable() {
             @Override
-            public void run() {
+            public void run() {*/
                 if (msg.length() == 0 || mOutputStream == null)
                     return;
                 try {   //发送
@@ -100,10 +128,13 @@ public class WifiService extends Service {
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
-            }
+        /*    }
         }).start();
+*/
+    }
 
-
+    public void sendMsg(String msg) {
+        handlerThread.sendEmptyMessage(ACTION_SEND_MSG);
     }
 
     class BroadcastReceiverInService extends BroadcastReceiver {
@@ -116,15 +147,11 @@ public class WifiService extends Service {
             Log.d("WifiDebug", "receivedBRinService");
             switch (action) {
                 case "WifiService.Action.SendMsg":
-                    writeMsg(msg);
-                    Log.d("WifiDebug", "writeFinish");
+                    sendMsg(msg);
                     break;
                 default:
                     break;
             }
         }
     }
-
-
-
 }

@@ -380,14 +380,14 @@ public class ContentActivity extends AppCompatActivity{
                     myDialog.show();
                     break;
                 case R.id.btn_search:
-                    if (!wifiControl.isWifiConnected()) {
+                    /*if (!wifiControl.isWifiConnected()) {
                         wifiControl.OpenWifi();
-                    } else {
+                    } else {*/
                         //TODO 搜索wifi
                         startWifiService();
                         imgDisconnect.setVisibility(View.INVISIBLE);
                         spinKitView.setVisibility(View.VISIBLE);
-                    }
+//                    }
                     break;
                 case R.id.img_color_control:
                     openColorPickerDialog();
