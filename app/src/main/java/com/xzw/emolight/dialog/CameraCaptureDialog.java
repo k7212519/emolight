@@ -44,10 +44,10 @@ public class CameraCaptureDialog extends DialogFragment {
     private ImageView btnScanImgFace;
     private ImageView btnScanImgFrame;
     private Button buttonScan;
-    private Button buttonSwitchCamera;
     private RelativeLayout layoutScan;
     private CameraView camera;
     private ImageView imageViewScanLine;
+    private ImageView imageViewSwitchCamera;
 
     private Bitmap bitmap;
     //接口类，用来传递bitmap到activity
@@ -71,7 +71,7 @@ public class CameraCaptureDialog extends DialogFragment {
         layoutScan = view.findViewById(R.id.layout_scan);
         btnScanImgFace = view.findViewById(R.id.img_scan_btn_face);
         btnScanImgFrame = view.findViewById(R.id.img_scan_btn_frame);
-        buttonSwitchCamera = view.findViewById(R.id.btn_switch_camera);
+        imageViewSwitchCamera = view.findViewById(R.id.img_switch_camera);
         camera = view.findViewById(R.id.camera_kit_in_dialog);
         camera.setMethod(cameraMethod);
         camera.setCropOutput(cropOutput);
@@ -142,7 +142,7 @@ public class CameraCaptureDialog extends DialogFragment {
         /**
          * 切换镜头
          */
-        buttonSwitchCamera.setOnClickListener(new View.OnClickListener() {
+        imageViewSwitchCamera.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 if (camera.isFacingFront()) {

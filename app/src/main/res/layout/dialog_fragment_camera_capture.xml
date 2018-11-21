@@ -11,7 +11,7 @@
 
 
     <LinearLayout
-        android:layout_width="wrap_content"
+        android:layout_width="100dp"
         android:layout_height="110dp"
         android:orientation="vertical"
         android:layout_alignBottom="@+id/camera_kit_in_dialog"
@@ -22,7 +22,7 @@
 
 
         <FrameLayout
-            android:layout_width="wrap_content"
+            android:layout_width="100dp"
             android:layout_height="0dp"
             android:layout_weight="3">
 
@@ -55,7 +55,6 @@
             android:textColor="@color/colorWhite"
             android:clickable="false"
             android:textSize="14sp" />
-
     </LinearLayout>
 
 
@@ -86,15 +85,17 @@
             />
     </RelativeLayout>
 
-    <Button
-        android:id="@+id/btn_switch_camera"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentStart="true"
-        android:layout_alignParentTop="true"
-        android:text="switch"
-        />
 
+    <ImageView
+        android:id="@+id/img_switch_camera"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentBottom="true"
+        android:layout_marginStart="50dp"
+        android:layout_marginBottom="70dp"
+        android:src="@drawable/img_camera_switch"
+        />
 
 
 
