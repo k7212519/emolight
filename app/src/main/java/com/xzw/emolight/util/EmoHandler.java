@@ -122,7 +122,7 @@ public class EmoHandler {
      * @param alpha
      * @return
      */
-    private Bitmap bitmapRotated(Bitmap originBitmap, float alpha) {
+    public Bitmap bitmapRotated(Bitmap originBitmap, float alpha) {
         Matrix matrix = new Matrix();
         matrix.setRotate(alpha);
         Bitmap bitmapRotate = Bitmap.createBitmap(

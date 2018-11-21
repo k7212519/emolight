@@ -5,6 +5,7 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.res.Resources;
 import android.graphics.Bitmap;
+import android.graphics.Matrix;
 import android.os.Bundle;
 import android.os.Vibrator;
 import android.support.annotation.NonNull;
@@ -36,6 +37,7 @@ public class CameraCaptureDialog extends DialogFragment {
     //camera属性：直接从view截取
     private int cameraMethod = CameraKit.Constants.METHOD_STILL;
     //camera属性：使用前置镜头
+    private int lastCamera = CameraKit.Constants.FACING_FRONT;
     private int cameraFace = CameraKit.Constants.FACING_FRONT;
     private int cameraBack = CameraKit.Constants.FACING_BACK;
     private boolean cropOutput = true;
@@ -73,7 +75,7 @@ public class CameraCaptureDialog extends DialogFragment {
         camera = view.findViewById(R.id.camera_kit_in_dialog);
         camera.setMethod(cameraMethod);
         camera.setCropOutput(cropOutput);
-        camera.setFacing(cameraFace);
+        camera.setFacing(lastCamera);
 
         /**
          * 设置dialog不响应空白处
@@ -103,10 +105,22 @@ public class CameraCaptureDialog extends DialogFragment {
                                 //返回CameraKitImage类型文件，使用imageCaptured()方法转bitmap
                                 bitmap = cameraKitImage.getBitmap();
 
-                                //获取byte[]类型数据
+                                //前后摄像头拍的照片方向相差180
+                                if (lastCamera == cameraBack) {
+                                    Matrix matrix = new Matrix();
+                                    matrix.setRotate(180);
+                                    Bitmap bitmapRotate = Bitmap.createBitmap(
+                                            bitmap, 0, 0, bitmap.getWidth(),
+                                            bitmap.getHeight(), matrix, false);
+
+                                    //获取byte[]类型数据
 //                                imageBytes = cameraKitImage.getJpeg();
-                                //传递bitmap
-                                onCaptureDialogFragmentListener.onHandleBitmap(bitmap);
+                                    //传递bitmapRotate
+                                    onCaptureDialogFragmentListener.onHandleBitmap(bitmapRotate);
+                                } else {
+                                    onCaptureDialogFragmentListener.onHandleBitmap(bitmap);
+                                }
+
 
                             }
                         });
@@ -133,8 +147,10 @@ public class CameraCaptureDialog extends DialogFragment {
             public void onClick(View v) {
                 if (camera.isFacingFront()) {
                     camera.setFacing(cameraBack);
+                    lastCamera = cameraBack;
                 } else if (camera.isFacingBack()) {
                     camera.setFacing(cameraFace);
+                    lastCamera = cameraFace;
                 }
             }
         });

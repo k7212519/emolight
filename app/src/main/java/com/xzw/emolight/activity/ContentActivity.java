@@ -133,6 +133,8 @@ public class ContentActivity extends AppCompatActivity{
         wifiIntent = new Intent(this, WifiService.class);
         //表情处理初始化
         emoHandler=new EmoHandler(ContentActivity.this, handler);
+        //CameraCaptureDialog 初始化
+        cameraCaptureDialog = new CameraCaptureDialog();
         //表情进度初始化
         progressWheel.setPercentage(2);
         //wifi开关控制
@@ -370,7 +372,6 @@ public class ContentActivity extends AppCompatActivity{
         public void onClick(View v) {
             switch (v.getId()) {
                 case R.id.btn_capture:
-                    cameraCaptureDialog = new CameraCaptureDialog();
                     FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
                     //设置dialogFragment进场动画
                     fragmentTransaction.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN);
