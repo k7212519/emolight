@@ -10,6 +10,7 @@ import android.os.Vibrator;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.DialogFragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
@@ -36,17 +37,17 @@ public class CameraCaptureDialog extends DialogFragment {
     private int cameraMethod = CameraKit.Constants.METHOD_STILL;
     //camera属性：使用前置镜头
     private int cameraFace = CameraKit.Constants.FACING_FRONT;
+    private int cameraBack = CameraKit.Constants.FACING_BACK;
     private boolean cropOutput = true;
     private ImageView btnScanImgFace;
     private ImageView btnScanImgFrame;
     private Button buttonScan;
+    private Button buttonSwitchCamera;
     private RelativeLayout layoutScan;
     private CameraView camera;
     private ImageView imageViewScanLine;
 
-    private String stringTest = "received";
     private Bitmap bitmap;
-    private byte[] imageBytes;
     //接口类，用来传递bitmap到activity
     public OnCaptureDialogFragmentListener onCaptureDialogFragmentListener;
 
@@ -68,6 +69,7 @@ public class CameraCaptureDialog extends DialogFragment {
         layoutScan = view.findViewById(R.id.layout_scan);
         btnScanImgFace = view.findViewById(R.id.img_scan_btn_face);
         btnScanImgFrame = view.findViewById(R.id.img_scan_btn_frame);
+        buttonSwitchCamera = view.findViewById(R.id.btn_switch_camera);
         camera = view.findViewById(R.id.camera_kit_in_dialog);
         camera.setMethod(cameraMethod);
         camera.setCropOutput(cropOutput);
@@ -120,6 +122,20 @@ public class CameraCaptureDialog extends DialogFragment {
                 }
                 //返回值含义暂时不理解
                 return true;
+            }
+        });
+
+        /**
+         * 切换镜头
+         */
+        buttonSwitchCamera.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (camera.isFacingFront()) {
+                    camera.setFacing(cameraBack);
+                } else if (camera.isFacingBack()) {
+                    camera.setFacing(cameraFace);
+                }
             }
         });
         return view;

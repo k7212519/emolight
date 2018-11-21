@@ -193,26 +193,26 @@ public class ContentActivity extends AppCompatActivity{
             switch (message.what) {
                 case ACTION_MESSAGE_EMOTION:
                     String emo = message.getData().getString("returnEmoMsg");
-
-                    //TODO 调用系统相机会闪退，需要判断cameraCapture状态
-                    cameraCaptureDialog.dismiss();
-
                     //myDialog.cancel();
-                    textViewReturnMsg.setText(emo);
+//                    textViewReturnMsg.setText(emo);
                     Log.d("debug",emo);
 
                     //解析emo数据
                     emotionClassifier = new EmotionClassifier(emo);
-                    //情绪结果和值
-                    String emoResult = emotionClassifier.getEmoResult(ContentActivity.this);
-                    double emoValue = emotionClassifier.getEmoResultValue();
-                    Log.d("debug", emotionClassifier.getEmoResult(ContentActivity.this));
-                    //设置情绪控件
-                    setProgressWheelByEmo(emoValue, emoResult);
-                    //调用灯光方案
-                    //发送 发送数据 广播
-                    sendMsgByWifi(lightPlan.getMsgNeedToSend(emoResult, emoValue));
-                    Log.d("debug", String.valueOf(emotionClassifier.getEmoResultValue()));
+                    //获取情绪结果和值
+                    if (emotionClassifier.getEmoResult(ContentActivity.this) != null) {
+                        cameraCaptureDialog.dismiss();
+                        String emoResult = emotionClassifier.getEmoResult(ContentActivity.this);
+                        double emoValue = emotionClassifier.getEmoResultValue();
+                        Log.d("debug", emotionClassifier.getEmoResult(ContentActivity.this));
+                        //设置情绪控件
+                        setProgressWheelByEmo(emoValue, emoResult);
+                        //调用灯光方案
+                        //发送 发送数据 广播
+                        sendMsgByWifi(lightPlan.getMsgNeedToSend(emoResult, emoValue));
+                        Log.d("debug", String.valueOf(emotionClassifier.getEmoResultValue()));
+                    }
+
                     break;
                 case 2:
                     /*if (TitleFragment.loadingImageSelect == 0) {
@@ -383,7 +383,7 @@ public class ContentActivity extends AppCompatActivity{
                                     Log.d("debug", "received");
                                     bitmapReceived = bitmapTmp;
                                     if (bitmapReceived != null) {
-                                        //将接收到的bitmap文件存入sdcard/emolpic/faceIng.jpg
+                                        //将接收到的bitmap文件存入sdcard/emolpic/faceImg.jpg
                                         emoHandler.createFile(bitmapReceived,
                                                 Environment.getExternalStorageDirectory()+"/emolpic/"+"faceImg.jpg");
                                         //从sdcard加载文件进行解析，通过handler解析返回值

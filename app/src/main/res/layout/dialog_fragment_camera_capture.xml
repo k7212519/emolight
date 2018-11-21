@@ -3,11 +3,11 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-        <com.wonderkiln.camerakit.CameraView
-            android:id="@+id/camera_kit_in_dialog"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:adjustViewBounds="false" />
+    <com.wonderkiln.camerakit.CameraView
+        android:id="@+id/camera_kit_in_dialog"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:adjustViewBounds="false" />
 
 
     <LinearLayout
@@ -85,6 +85,15 @@
             android:alpha="1"
             />
     </RelativeLayout>
+
+    <Button
+        android:id="@+id/btn_switch_camera"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentTop="true"
+        android:text="switch"
+        />
 
 
 

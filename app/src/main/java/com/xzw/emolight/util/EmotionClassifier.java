@@ -29,25 +29,28 @@ public class EmotionClassifier {
 
     public String getEmoResult(Context context) {
         //0 happiness  1 Neutral  2 Surprise  3 Sadness  4 Fear  5 Disgust  6 Anger
-        int index = emoResultArrayList.indexOf(Collections.max(emoResultArrayList));
-        switch (index) {
-            case 0:
-                return context.getString(R.string.emotion_happy);
-            case 1:
-                return context.getString(R.string.emotion_neutral);
-            case 2:
-                return context.getString(R.string.emotion_surprise);
-            case 3:
-                return context.getString(R.string.emotion_sadness);
-            case 4:
-                return context.getString(R.string.emotion_fear);
-            case 5:
-                return context.getString(R.string.emotion_disgust);
-            case 6:
-                return context.getString(R.string.emotion_anger);
-            default:
-                return context.getString(R.string.emotion_null);
+        if (emoResultArrayList.size() != 0) {
+            int index = emoResultArrayList.indexOf(Collections.max(emoResultArrayList));
+            switch (index) {
+                case 0:
+                    return context.getString(R.string.emotion_happy);
+                case 1:
+                    return context.getString(R.string.emotion_neutral);
+                case 2:
+                    return context.getString(R.string.emotion_surprise);
+                case 3:
+                    return context.getString(R.string.emotion_sadness);
+                case 4:
+                    return context.getString(R.string.emotion_fear);
+                case 5:
+                    return context.getString(R.string.emotion_disgust);
+                case 6:
+                    return context.getString(R.string.emotion_anger);
+                default:
+                    return context.getString(R.string.emotion_null);
+            }
         }
+        return null;
     }
 
     /**
@@ -55,16 +58,15 @@ public class EmotionClassifier {
      * @param faceInfo
      */
     private void addEmoToArray(FaceInfo faceInfo) {
-        emoResultArrayList.add(faceInfo.getFaces().get(0).getAttributes().getEmotion().getHappiness());
-        emoResultArrayList.add(faceInfo.getFaces().get(0).getAttributes().getEmotion().getNeutral());
-        emoResultArrayList.add(faceInfo.getFaces().get(0).getAttributes().getEmotion().getSurprise());
-        emoResultArrayList.add(faceInfo.getFaces().get(0).getAttributes().getEmotion().getSadness());
-        emoResultArrayList.add(faceInfo.getFaces().get(0).getAttributes().getEmotion().getFear());
-        emoResultArrayList.add(faceInfo.getFaces().get(0).getAttributes().getEmotion().getDisgust());
-        emoResultArrayList.add(faceInfo.getFaces().get(0).getAttributes().getEmotion().getAnger());
+        if (faceInfo.getFaces().toString() != "[]") {
+            emoResultArrayList.add(faceInfo.getFaces().get(0).getAttributes().getEmotion().getHappiness());
+            emoResultArrayList.add(faceInfo.getFaces().get(0).getAttributes().getEmotion().getNeutral());
+            emoResultArrayList.add(faceInfo.getFaces().get(0).getAttributes().getEmotion().getSurprise());
+            emoResultArrayList.add(faceInfo.getFaces().get(0).getAttributes().getEmotion().getSadness());
+            emoResultArrayList.add(faceInfo.getFaces().get(0).getAttributes().getEmotion().getFear());
+            emoResultArrayList.add(faceInfo.getFaces().get(0).getAttributes().getEmotion().getDisgust());
+            emoResultArrayList.add(faceInfo.getFaces().get(0).getAttributes().getEmotion().getAnger());
+        }
+
     }
-
-
-
-
 }

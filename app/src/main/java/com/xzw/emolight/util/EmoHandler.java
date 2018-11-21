@@ -131,8 +131,11 @@ public class EmoHandler {
         return bitmapRotate;
     }
 
+    /**
+     * 通过handler+bundle+message向主线程传递消息，UI事件在主线程中处理
+     * @param returnMsg
+     */
     private void sendMsg(String returnMsg) {
-        //通过handler+bundle+message向主线程传递消息，UI事件在主线程中处理
         Message message = handler.obtainMessage();
         message.what = ContentActivity.ACTION_MESSAGE_EMOTION;
         Bundle bundle = new Bundle();
