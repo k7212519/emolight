@@ -139,23 +139,26 @@ public class MainActivity extends AppCompatActivity{
         return floatValues;
     }
 
-    Bitmap adjustPhotoRotation(Bitmap bm, final int orientationDegree)
-    {
-        Matrix m = new Matrix();
-        m.setRotate(orientationDegree, (float) bm.getWidth() / 2, (float) bm.getHeight() / 2);
-
-        try {
-            Bitmap bm1 = Bitmap.createBitmap(bm, 0, 0, bm.getWidth(), bm.getHeight(), m, true);
-            return bm1;
-        } catch (OutOfMemoryError ex) {
-        }
-        return null;
-
+    /**
+     * 图片旋转
+     * @param originBitmap
+     * @param alpha
+     * @return
+     */
+    public Bitmap bitmapRotated(Bitmap originBitmap, float alpha) {
+        Matrix matrix = new Matrix();
+        matrix.setRotate(alpha);
+        Bitmap bitmapRotate = Bitmap.createBitmap(
+                originBitmap, 0, 0, originBitmap.getWidth(),
+                originBitmap.getHeight(), matrix, false);
+        return bitmapRotate;
     }
 
     private void detectFace(Bitmap bitmap)
     {
 
+        Bitmap bitmapRotate = bitmapRotated(bitmap, 180);
+        bitmap = bitmapRotate;
         Mat img = new Mat();
         Utils.bitmapToMat(bitmap, img);
 
@@ -191,11 +194,11 @@ public class MainActivity extends AppCompatActivity{
         imageView.setImageBitmap(bitmap);
         Bitmap destBitmap = Bitmap.createBitmap(bitmap, (int) (facesArray[0].tl().x), (int) (facesArray[0].tl().y), facesArray[0].width, facesArray[0].height);
         Bitmap scaleImage = scaleImage(destBitmap, 48, 48);
-        Bitmap bitmap5 = toGrayscale(scaleImage);
+        Bitmap bitmapGray = toGrayscale(scaleImage);
 //        Bitmap bitmap6 = adjustPhotoRotation(bitmap5, 270);
 
         classifier = new Classifier(getAssets(),MODEL_FILE);
-        ArrayList<String> result = classifier.predict(getSingleChannelPixel(bitmap5));
+        ArrayList<String> result = classifier.predict(getSingleChannelPixel(bitmapGray));
         //0=Angry, 1=Disgust, 2=Fear, 3=Happy, 4=Sad, 5=Surprise, 6=Neutral
         String str = result.get(0);
         switch(str){
@@ -266,7 +269,7 @@ public class MainActivity extends AppCompatActivity{
                     Log.d("debug", "startActivity");
                     break;
                 case R.id.btn_grey_photo:
-                    String pathString = Environment.getExternalStorageDirectory() + "/tempImage" + ".jpg";
+                    String pathString = Environment.getExternalStorageDirectory() + "/emolpic/faceImg" + ".jpg";
                     Log.d("matrix",pathString + "");
                     Bitmap bitmap = null;
                     try
