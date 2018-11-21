@@ -33,6 +33,7 @@ import com.xzw.emolight.adapter.TitleBar;
 import com.xzw.emolight.dialog.CameraCaptureDialog;
 import com.xzw.emolight.dialog.MyDialog;
 import com.xzw.emolight.R;
+import com.xzw.emolight.others.LightPlan;
 import com.xzw.emolight.others.WifiControl;
 import com.xzw.emolight.service.WifiService;
 import com.xzw.emolight.util.EmoHandler;
@@ -71,6 +72,8 @@ public class ContentActivity extends AppCompatActivity{
     private EmotionClassifier emotionClassifier;
     //情绪百分比圆盘控件
     private SpinKitView spinKitView;
+    //灯光方案
+    private LightPlan lightPlan;
     //选色dialog
 //    private ColorPickerDialog colorPickerDialog;
     //连接状态图片
@@ -125,6 +128,7 @@ public class ContentActivity extends AppCompatActivity{
     }
 
     private void initData() {
+        lightPlan = new LightPlan(this);
         //wifiService的intent初始化
         wifiIntent = new Intent(this, WifiService.class);
         //表情处理初始化
@@ -199,10 +203,15 @@ public class ContentActivity extends AppCompatActivity{
 
                     //解析emo数据
                     emotionClassifier = new EmotionClassifier(emo);
-                    emotionClassifier.getEmoResult(ContentActivity.this);
+                    //情绪结果和值
+                    String emoResult = emotionClassifier.getEmoResult(ContentActivity.this);
+                    double emoValue = emotionClassifier.getEmoResultValue();
                     Log.d("debug", emotionClassifier.getEmoResult(ContentActivity.this));
-                    setProgressWheelByEmo(emotionClassifier.getEmoResultValue(),
-                            emotionClassifier.getEmoResult(ContentActivity.this));
+                    //设置情绪控件
+                    setProgressWheelByEmo(emoValue, emoResult);
+                    //调用灯光方案
+                    //发送 发送数据 广播
+                    sendMsgByWifi(lightPlan.getMsgNeedToSend(emoResult, emoValue));
                     Log.d("debug", String.valueOf(emotionClassifier.getEmoResultValue()));
                     break;
                 case 2:
@@ -272,6 +281,11 @@ public class ContentActivity extends AppCompatActivity{
         startActivityForResult(intentCapture, 0);
     }
 
+    /**
+     * 设置情绪控件
+     * @param emoValue
+     * @param emoType
+     */
     private void setProgressWheelByEmo(double emoValue, String emoType) {
         if (emoValue > 99) {
             progressWheel.setPercentage(360);
