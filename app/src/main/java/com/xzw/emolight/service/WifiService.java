@@ -144,7 +144,7 @@ public class WifiService extends Service {
             Log.d("WifiDebug", action);
             Log.d("WifiDebug", "receivedBRinService");
             switch (action) {
-                case "WifiService.Action.SendMsg":
+                case ACTION_BR_SEND_MSG:
                     sendMsg(msg);
                     break;
                 default:

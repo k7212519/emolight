@@ -48,6 +48,7 @@ import static com.xzw.emolight.service.WifiService.ACTION_BR_SEND_MSG;
 public class ContentActivity extends AppCompatActivity{
 
     public final static int ACTION_MESSAGE_EMOTION = 1;
+    public final static String ACTION_WIFI_CONNECTED = "wifiSocketConnected";
 
     //是否使用特殊的标题栏背景颜色，android5.0以上可以设置状态栏背景色，如果不使用则使用透明色值
     protected boolean useStatusBarColor = true;
@@ -326,6 +327,8 @@ public class ContentActivity extends AppCompatActivity{
         public void onColorSelected(int dialogId, @ColorInt int color) {
             if (dialogId == 0) {
                 //colorPickerViewModel.setColor(color);
+                Log.d("colorDebug", Integer.toHexString(color-0x7f000000));
+                sendMsgByWifi(colorToMsg(color));
             }
         }
 
@@ -361,6 +364,41 @@ public class ContentActivity extends AppCompatActivity{
         intent.putExtra("msg", msg);
         sendBroadcast(intent);
         return true;
+    }
+
+    /**
+     * 选色盘返回的color值转需要发送的信息
+     * @param color
+     * @return
+     */
+    private String colorToMsg(int color) {
+        String hexString = Integer.toHexString(color);
+        String colorString = Integer.toHexString(color).substring(2, 8);
+        int colorR = Integer.valueOf(colorString.substring(0,2), 16);
+        int colorG = Integer.valueOf(colorString.substring(2, 4), 16);
+        int colorB = Integer.valueOf(colorString.substring(4, 6), 16);
+        String colorRstring = String.valueOf(colorR*4);
+        String colorGstring = String.valueOf(colorG*4);
+        String colorBstring = String.valueOf(colorB*4);
+        if (colorRstring.length() < 4) {
+            for (int i=colorRstring.length(); i < 4; i++) {
+                colorRstring = "0" + colorRstring;
+            }
+        }
+
+        if (colorGstring.length() < 4) {
+            for (int i=colorGstring.length(); i < 4; i++) {
+                colorGstring = "0" + colorGstring;
+            }
+        }
+
+        if (colorBstring.length() < 4) {
+            for (int i=colorBstring.length(); i < 4; i++) {
+                colorBstring = "0" + colorBstring;
+            }
+        }
+        Log.d("colorDebug", colorRstring + "+" + colorGstring + "+" + colorBstring);
+        return "a" + colorRstring + colorGstring + colorBstring;
     }
 
 
@@ -432,6 +470,11 @@ public class ContentActivity extends AppCompatActivity{
                 case "ContentActivity.Action.ReceivedMsg":
                     break;
                 case "readMsg":
+                    break;
+                case ACTION_WIFI_CONNECTED:
+                    //连接成功更新UI
+                    spinKitView.setVisibility(View.INVISIBLE);
+                    imgDisconnect.setVisibility(View.VISIBLE);
                     break;
                 default:
                     break;
