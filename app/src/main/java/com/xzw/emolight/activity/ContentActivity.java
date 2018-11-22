@@ -48,7 +48,8 @@ import static com.xzw.emolight.service.WifiService.ACTION_BR_SEND_MSG;
 public class ContentActivity extends AppCompatActivity{
 
     public final static int ACTION_MESSAGE_EMOTION = 1;
-    public final static String ACTION_WIFI_CONNECTED = "wifiSocketConnected";
+    public final static int ACTION_MESSAGE_UI_SEARCHING = 3;
+
 
     //是否使用特殊的标题栏背景颜色，android5.0以上可以设置状态栏背景色，如果不使用则使用透明色值
     protected boolean useStatusBarColor = true;
@@ -83,6 +84,7 @@ public class ContentActivity extends AppCompatActivity{
     //自定义的wifi控制类
     private WifiControl wifiControl;
     private Button btnControlColor;
+    private TextView textConnectStatus;
 
     private Intent wifiIntent;
 
@@ -158,6 +160,7 @@ public class ContentActivity extends AppCompatActivity{
         imgDisconnect = findViewById(R.id.img_connect_status);
         Button btn_search = findViewById(R.id.btn_search);
         textViewReturnMsg = findViewById(R.id.text_return_msg);
+        textConnectStatus = findViewById(R.id.text_connect_status);
         btnCapture.setOnClickListener(myClickListener);
         btnChangeColor.setOnClickListener(myClickListener);
         btn_search.setOnClickListener(myClickListener);
@@ -225,6 +228,10 @@ public class ContentActivity extends AppCompatActivity{
                     } else {
                         dialogImageResId = R.drawable.loading;
                     }*/
+                    break;
+                case ACTION_MESSAGE_UI_SEARCHING:
+                    imgDisconnect.setVisibility(View.VISIBLE);
+                    spinKitView.setVisibility(View.INVISIBLE);
                     break;
                 default:
                     break;
@@ -349,7 +356,8 @@ public class ContentActivity extends AppCompatActivity{
     private void registerBroadcast() {
         BroadcastReceiverInContentActivity broadcastReceiverInContentActivity = new BroadcastReceiverInContentActivity();
         IntentFilter intentFilter = new IntentFilter();
-        intentFilter.addAction("ContentActivity.Action.ReceivedMsg");
+        intentFilter.addAction(WifiService.ACTION_WIFI_CONNECTED);
+        intentFilter.addAction(WifiService.ACTION_WIFI_CONNECTED_ERROR);
         registerReceiver(broadcastReceiverInContentActivity, intentFilter);
     }
 
@@ -372,7 +380,6 @@ public class ContentActivity extends AppCompatActivity{
      * @return
      */
     private String colorToMsg(int color) {
-        String hexString = Integer.toHexString(color);
         String colorString = Integer.toHexString(color).substring(2, 8);
         int colorR = Integer.valueOf(colorString.substring(0,2), 16);
         int colorG = Integer.valueOf(colorString.substring(2, 4), 16);
@@ -399,6 +406,31 @@ public class ContentActivity extends AppCompatActivity{
         }
         Log.d("colorDebug", colorRstring + "+" + colorGstring + "+" + colorBstring);
         return "a" + colorRstring + colorGstring + colorBstring;
+    }
+
+    /**
+     * 搜索开始和结束的动画   0 - 开始    1 - 结束
+     * @param action
+     */
+    private void searchingAnimal(int action) {
+        textConnectStatus.setText(R.string.connecting);
+        imgDisconnect.setVisibility(View.INVISIBLE);
+        spinKitView.setVisibility(View.VISIBLE);
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    //3s后动画自动消失
+                    Thread.sleep(2000);
+
+                    handler.sendEmptyMessage(ACTION_MESSAGE_UI_SEARCHING);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+            }
+        }).start();
+
+
     }
 
 
@@ -445,8 +477,7 @@ public class ContentActivity extends AppCompatActivity{
                     } else {*/
                         //TODO 搜索wifi
                         startWifiService();
-                        imgDisconnect.setVisibility(View.INVISIBLE);
-                        spinKitView.setVisibility(View.VISIBLE);
+                        searchingAnimal(0);
 //                    }
                     break;
                 case R.id.img_color_control:
@@ -467,15 +498,12 @@ public class ContentActivity extends AppCompatActivity{
         public void onReceive(Context context, Intent intent) {
             String action = intent.getAction();
             switch (action) {
-                case "ContentActivity.Action.ReceivedMsg":
-                    break;
-                case "readMsg":
-                    break;
-                case ACTION_WIFI_CONNECTED:
+                case WifiService.ACTION_WIFI_CONNECTED:
                     //连接成功更新UI
-                    spinKitView.setVisibility(View.INVISIBLE);
-                    imgDisconnect.setVisibility(View.VISIBLE);
+                    textConnectStatus.setText(R.string.connected_devices);
                     break;
+                case WifiService.ACTION_WIFI_CONNECTED_ERROR:
+                    textConnectStatus.setText(R.string.connect_error);
                 default:
                     break;
             }

@@ -12,6 +12,8 @@ import android.os.Message;
 import android.renderscript.ScriptGroup;
 import android.util.Log;
 
+import com.xzw.emolight.activity.ContentActivity;
+
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -24,9 +26,11 @@ public class WifiService extends Service {
 
     public final static int ACTION_SEND_MSG = 1;
     public final static String ACTION_BR_SEND_MSG = "WifiService.Action.SendMsg";
+    public final static String ACTION_WIFI_CONNECTED = "wifiSocketConnected";
+    public final static String ACTION_WIFI_CONNECTED_ERROR = "wifiSocketConnectError";
 
     public Handler handlerThread;
-    private Socket mSocket;
+    private Socket mSocket = null;
     private String mIpAddress;
     private int mClientPort;
     private InputStream mInputStream;
@@ -58,19 +62,19 @@ public class WifiService extends Service {
         Thread wifiSocketThread = new Thread(new Runnable() {
             @Override
             public void run() {
-
                 try {
                     mSocket = new Socket(mIpAddress, mClientPort);
-                    if(mSocket != null){
+                    if (mSocket != null) {
                         //获取输出流、输入流
                         Log.d("WifiDebug", "获得了socket");
                         mOutputStream = mSocket.getOutputStream();
                         mInputStream = mSocket.getInputStream();
+                        sendConnectStatusBroadcast(ACTION_WIFI_CONNECTED);
                     }
                 } catch (IOException e) {
+                    sendConnectStatusBroadcast(ACTION_WIFI_CONNECTED_ERROR);
                     e.printStackTrace();
                 }
-
                 //子线程接收消息
                 Looper.prepare();
                 handlerThread = new Handler(new Handler.Callback(){
@@ -130,9 +134,19 @@ public class WifiService extends Service {
         }
     }
 
+
     public void sendMsg(String msg) {
         //向子线程发送消息
         handlerThread.obtainMessage(ACTION_SEND_MSG, msg).sendToTarget();
+    }
+
+    /**
+     * 发送设备连接状态广播
+     */
+    private void sendConnectStatusBroadcast(String action) {
+        Intent intent = new Intent();
+        intent.setAction(action);
+        sendBroadcast(intent);
     }
 
     class BroadcastReceiverInService extends BroadcastReceiver {

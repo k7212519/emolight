@@ -24,4 +24,9 @@
     <string name="research">重新搜索设备</string>
     <string name="search">搜索</string>
     <string name="control_color">调色</string>
+
+    <string name="disconnect_devices">未连接到设备</string>
+    <string name="connected_devices">已连接成功</string>
+    <string name="connecting">正在连接...</string>
+    <string name="connect_error">连接失败</string>
 </resources>
