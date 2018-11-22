@@ -33,8 +33,8 @@ public class WifiService extends Service {
     private Socket mSocket = null;
     private String mIpAddress;
     private int mClientPort;
-    private InputStream mInputStream;
-    private OutputStream mOutputStream;
+    private InputStream mInputStream = null;
+    private OutputStream mOutputStream = null;
     public WifiService() {
         this.mIpAddress = "192.168.43.249";
         this.mClientPort = 80;
@@ -63,6 +63,7 @@ public class WifiService extends Service {
             @Override
             public void run() {
                 try {
+                    sendConnectStatusBroadcast(ACTION_WIFI_CONNECTED_ERROR);
                     mSocket = new Socket(mIpAddress, mClientPort);
                     if (mSocket != null) {
                         //获取输出流、输入流
