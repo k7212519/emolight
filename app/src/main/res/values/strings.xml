@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">Emolight</string>
+    <string name="app_name">EmoLight</string>
 
     <string name="capture">扫描</string>
     <string name="change_color">调色</string>
