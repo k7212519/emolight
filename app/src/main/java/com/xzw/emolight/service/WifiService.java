@@ -33,8 +33,8 @@ public class WifiService extends Service {
     private Socket mSocket = null;
     private String mIpAddress;
     private int mClientPort;
-    private InputStream mInputStream = null;
-    private OutputStream mOutputStream = null;
+    private InputStream mInputStream;
+    private OutputStream mOutputStream;
     public WifiService() {
         this.mIpAddress = "192.168.43.249";
         this.mClientPort = 80;
