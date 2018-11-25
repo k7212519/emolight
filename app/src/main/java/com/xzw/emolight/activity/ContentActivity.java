@@ -335,7 +335,7 @@ public class ContentActivity extends AppCompatActivity{
             if (dialogId == 0) {
                 //colorPickerViewModel.setColor(color);
                 Log.d("colorDebug", Integer.toHexString(color-0x7f000000));
-                sendMsgByWifi(colorToMsg(color));
+                sendMsgByWifi(lightPlan.colorToMsg(color));
             }
         }
 
@@ -375,40 +375,6 @@ public class ContentActivity extends AppCompatActivity{
     }
 
     /**
-     * 选色盘返回的color值转需要发送的信息
-     * @param color
-     * @return
-     */
-    private String colorToMsg(int color) {
-        String colorString = Integer.toHexString(color).substring(2, 8);
-        int colorR = Integer.valueOf(colorString.substring(0,2), 16);
-        int colorG = Integer.valueOf(colorString.substring(2, 4), 16);
-        int colorB = Integer.valueOf(colorString.substring(4, 6), 16);
-        String colorRstring = String.valueOf(colorR*4);
-        String colorGstring = String.valueOf(colorG*4);
-        String colorBstring = String.valueOf(colorB*4);
-        if (colorRstring.length() < 4) {
-            for (int i=colorRstring.length(); i < 4; i++) {
-                colorRstring = "0" + colorRstring;
-            }
-        }
-
-        if (colorGstring.length() < 4) {
-            for (int i=colorGstring.length(); i < 4; i++) {
-                colorGstring = "0" + colorGstring;
-            }
-        }
-
-        if (colorBstring.length() < 4) {
-            for (int i=colorBstring.length(); i < 4; i++) {
-                colorBstring = "0" + colorBstring;
-            }
-        }
-        Log.d("colorDebug", colorRstring + "+" + colorGstring + "+" + colorBstring);
-        return "a" + colorRstring + colorGstring + colorBstring;
-    }
-
-    /**
      * 搜索开始和结束的动画   0 - 开始    1 - 结束
      * @param action
      */
@@ -422,7 +388,6 @@ public class ContentActivity extends AppCompatActivity{
                 try {
                     //3s后动画自动消失
                     Thread.sleep(2000);
-
                     handler.sendEmptyMessage(ACTION_MESSAGE_UI_SEARCHING);
                 } catch (InterruptedException e) {
                     e.printStackTrace();

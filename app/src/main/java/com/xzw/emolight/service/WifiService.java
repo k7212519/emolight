@@ -36,7 +36,7 @@ public class WifiService extends Service {
     private InputStream mInputStream;
     private OutputStream mOutputStream;
     public WifiService() {
-        this.mIpAddress = "192.168.43.249";
+        this.mIpAddress = "192.168.43.149";
         this.mClientPort = 80;
     }
 
