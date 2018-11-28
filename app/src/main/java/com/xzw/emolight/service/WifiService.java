@@ -35,6 +35,7 @@ public class WifiService extends Service {
     private int mClientPort;
     private InputStream mInputStream;
     private OutputStream mOutputStream;
+
     public WifiService() {
         this.mIpAddress = "192.168.43.149";
         this.mClientPort = 80;
@@ -78,7 +79,7 @@ public class WifiService extends Service {
                 }
                 //子线程接收消息
                 Looper.prepare();
-                handlerThread = new Handler(new Handler.Callback(){
+                handlerThread = new Handler(new Handler.Callback() {
                     @Override
                     public boolean handleMessage(Message msg) {
                         msg.obj.toString();
